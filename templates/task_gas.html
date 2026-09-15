@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Q003 — Gas Process Working Model</title>
+<link rel="stylesheet" href="/static/style.css">
+<style>
+:root{--blue:#2563eb;--navy:#0f1f3d;--cyan:#06b6d4;--teal:#0f766e;--orange:#f59e0b;--red:#dc2626}
+.gashero{background:linear-gradient(135deg,#071b3a,#173b69 55%,#0e7490);color:#fff;border:0;position:relative;overflow:hidden}.gashero:after{content:"";position:absolute;inset:auto -10% -70px auto;width:330px;height:180px;border-radius:50%;background:#38bdf833}.gashero h1,.gashero h2{color:#fff}.gas-note{background:#ffffff12;border:1px solid #ffffff25;border-left:4px solid #67e8f9;padding:14px 16px;border-radius:12px;margin-top:14px}.gas-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}.gas-progress div{padding:10px;border-radius:10px;background:#ffffff12;border:1px solid #ffffff22;text-align:center;font-weight:900;font-size:11px}.gas-progress .on{background:#ffffff18;border-color:#67e8f9;color:#cffafe}
+.model-shell{background:#eef5fb;border:1px solid #cbdbea;border-radius:22px;padding:16px}.model-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.model-top h2{margin:0;font-size:20px}.model-status{padding:9px 13px;border-radius:999px;background:#dcfce7;color:#166534;font-weight:900;font-size:11px}.model-grid{display:grid;grid-template-columns:1.08fr .82fr 1.12fr;gap:14px}.panel{background:#fff;border:1px solid #d8e1ec;border-radius:18px;padding:15px;box-shadow:0 5px 18px #16324b0d}.panel-title{font-size:12px;font-weight:900;letter-spacing:.7px;color:#334155;margin-bottom:12px}.machine{height:500px;position:relative;overflow:hidden;background:linear-gradient(180deg,#f8fcff,#e8f4ff);border-radius:14px;border:1px solid #d7e7f5}.machine-grid{position:absolute;inset:0;background-image:linear-gradient(#cbd5e122 1px,transparent 1px),linear-gradient(90deg,#cbd5e122 1px,transparent 1px);background-size:28px 28px}.cyl-outer{position:absolute;left:50%;transform:translateX(-50%);top:72px;width:190px;height:310px;border:7px solid #334155;border-top-width:10px;border-radius:28px 28px 18px 18px;background:linear-gradient(90deg,#cbd5e755,#fff,#cbd5e755);box-shadow:inset 0 0 30px #64748b22,0 12px 25px #0f172a18}.cyl-inner{position:absolute;left:11px;right:11px;bottom:11px;height:78%;border-radius:0 0 14px 14px;background:radial-gradient(circle at 50% 20%,#67e8f9,#0ea5e9 55%,#075985);opacity:.9;transition:height .7s,filter .4s}.cyl-inner.hot{filter:saturate(1.35) brightness(1.08)}.piston{position:absolute;left:3px;right:3px;height:26px;bottom:76%;background:linear-gradient(#94a3b8,#334155);border-radius:7px;box-shadow:0 4px 8px #0f172a44;transition:bottom .8s}.piston:after{content:"PISTON";position:absolute;left:50%;top:5px;transform:translateX(-50%);font-size:9px;color:#fff;font-weight:900;letter-spacing:1px}.rod{position:absolute;left:50%;transform:translateX(-50%);bottom:100%;width:12px;height:66px;background:linear-gradient(90deg,#64748b,#cbd5e1,#475569);border-radius:6px}.load{position:absolute;left:50%;transform:translateX(-50%);bottom:122%;min-width:92px;padding:9px 12px;text-align:center;background:#475569;color:#fff;border-radius:9px;font-size:10px;font-weight:900;box-shadow:0 5px 12px #0002}.base{position:absolute;left:50%;transform:translateX(-50%);bottom:30px;width:245px;height:18px;background:#334155;border-radius:10px}.heat-arrow{position:absolute;left:50%;transform:translateX(-50%);bottom:52px;font-size:32px;opacity:.1;transition:.35s}.heat-arrow.on{opacity:1;animation:pulse .8s infinite alternate}.heat-arrow.cool{opacity:1;filter:hue-rotate(160deg)}@keyframes pulse{to{transform:translateX(-50%) translateY(-7px)}}.gauge{position:absolute;width:76px;height:76px;border-radius:50%;background:#fff;border:6px solid #475569;box-shadow:0 6px 14px #0002;display:grid;place-items:center;text-align:center}.gauge small{font-size:8px;font-weight:900;color:#64748b}.gauge b{font-size:12px}.g1{left:20px;top:92px}.g2{right:20px;top:92px}.g3{right:20px;top:205px}.tag{position:absolute;padding:7px 9px;border-radius:8px;background:#0f172ae8;color:#fff;font-size:9px;font-weight:900;letter-spacing:.4px}.tag1{left:20px;top:182px}.tag2{left:20px;top:220px}.tag3{right:18px;top:315px}.energy{position:absolute;left:18px;right:18px;bottom:70px;display:flex;justify-content:space-between;gap:6px}.energy span{font-size:9px;font-weight:900;padding:6px 7px;border-radius:8px;background:#fff;border:1px solid #dbe3ec;color:#475569}.energy .active{background:#fff7ed;border-color:#fdba74;color:#c2410c}.controls .control-card{padding:12px;border-radius:13px;background:#f8fafc;border:1px solid #e2e8f0;margin-bottom:10px}.controls label{display:block;font-size:10px;font-weight:900;color:#475569;margin-bottom:6px}.controls select,.controls input{padding:9px;font-size:13px}.proc-btn{width:100%;text-align:left;margin-bottom:7px;background:#fff;color:#172033;border:1px solid #dbe2ea}.proc-btn:hover{background:#eff6ff}.proc-btn.active{background:#eff6ff;border-color:#60a5fa;color:#1d4ed8;box-shadow:0 0 0 2px #bfdbfe}.proc-btn b{display:block}.proc-btn small{display:block;color:#64748b;margin-top:2px}.runbtn{width:100%;background:linear-gradient(135deg,#0f766e,#0891b2);font-size:15px;padding:14px;margin-top:4px}.resetbtn{width:100%;margin-top:8px;background:#64748b}.hint{font-size:10px;color:#64748b;line-height:1.45;margin:8px 0 0}.pv-panel{position:relative}.pvbox{height:300px;border-radius:13px;border:1px solid #dce4ed;background:#fbfdff;overflow:hidden}.pvsvg{width:100%;height:100%}.legend{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.legend div{padding:7px 8px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0;font-size:9px;font-weight:800}.readouts{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}.readout{padding:9px;border-radius:9px;background:#f8fafc;border:1px solid #e2e8f0;text-align:center}.readout b{display:block;font-size:15px;color:#172033}.readout span{font-size:9px;color:#64748b;font-weight:800}.resultgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.result{padding:12px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0;text-align:center}.result b{display:block;font-size:18px}.result small{color:#64748b;font-size:10px}.formula{background:#eff6ff;border:1px solid #bfdbfe;padding:12px;border-radius:11px;font-size:12px}.answergrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.answerbox{border:1px solid #dbe2ea;border-radius:13px;padding:12px;background:#fff}.answerbox label{display:block;font-size:10px;font-weight:900;margin-bottom:7px;color:#334155}.answerbox textarea{min-height:115px;font-size:12px}.lockrow{display:flex;gap:7px;align-items:flex-start}.lockrow>*:first-child{flex:1}.mini{min-width:44px;border:1px solid #cbd5e1;background:#fff;color:#172033;border-radius:9px;padding:9px;cursor:pointer}.locked-field{background:#f1f5f9!important;color:#64748b}.submitbar{position:sticky;bottom:12px;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;background:white;border:1px solid #cbd5e1;border-radius:16px;padding:14px 16px;box-shadow:0 12px 35px #0002}.submitbar p{margin:3px 0 0;color:#64748b;font-size:11px}.submitbar button{white-space:nowrap}.perma{font-weight:800;color:#166534}.mission{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.mission div{padding:11px;border-radius:11px;background:#fff;border:1px solid #dbe2ea}.mission b{font-size:11px}.mission span{display:block;font-size:10px;color:#64748b;margin-top:3px}
+@media(max-width:1050px){.model-grid{grid-template-columns:1fr 1fr}.pv-panel{grid-column:1/-1}.answergrid{grid-template-columns:1fr 1fr}.resultgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.gas-progress,.mission,.model-grid,.answergrid,.resultgrid{grid-template-columns:1fr}.pv-panel{grid-column:auto}.machine{height:450px}.submitbar{flex-direction:column;align-items:stretch}.submitbar button{width:100%}}
+</style>
+</head>
+<body>
+<nav><b>🔥 PLM MESA</b><a href="/student">← Task Dashboard</a></nav>
+<main>
+<div class="taskhead"><div><span class="code">{{task.code}}</span><h1>Task {{task.task_no}} — Gas Process Working Model</h1><p>Chapter 3 · Properties of Gases · {{task.marks}} marks</p></div><div class="lockbig">{{'🔒 SUBMITTED' if task.status=='SUBMITTED' else '🟡 IN PROGRESS'}}</div></div>
+
+<section class="card gashero">
+<div class="eyebrow">PFL ENGINEERING CHALLENGE · CHAPTER 3</div>
+<h2>⚙️ DEVELOP & DEMONSTRATE A GAS PROCESS</h2>
+<p><b>Given Engineering Problem:</b> A mechanical engineer is analysing air in a piston–cylinder system. Select an appropriate thermodynamic process, configure the initial and final conditions, run the working model, observe the P–V behaviour and determine the resulting state and energy interactions.</p>
+<div class="gas-note"><b>Your task:</b> Do not treat this as a conventional numerical. Use the working model as an engineering tool. Your final response must match what you demonstrated in the model and must use the Chapter 3 process relationship.</div>
+<div class="gas-progress"><div class="on">01<br>IDENTIFY</div><div class="on">02<br>CONFIGURE</div><div class="on">03<br>DEMONSTRATE</div><div class="on">04<br>INTERPRET</div></div>
+<div class="mission"><div><b>System</b><span>Closed piston–cylinder containing air</span></div><div><b>Gas model</b><span>Ideal gas · R = 0.287 kJ/kg·K · γ = 1.40</span></div></div>
+</section>
+
+<section class="card">
+<div class="sectiontitle"><span>01</span><div><h2>CHOOSE THE ENGINEERING PROCESS</h2><p>Select the process you will develop and demonstrate.</p></div></div>
+<div class="model-shell">
+<div class="model-top"><h2>🧭 Process Selection Console</h2><span class="model-status" id="consoleStatus">READY</span></div>
+<div id="processButtons">
+<button type="button" class="proc-btn" data-process="isochoric"><b>Constant Volume / Isochoric</b><small>Rigid sealed vessel · V = constant</small></button>
+<button type="button" class="proc-btn" data-process="isobaric"><b>Constant Pressure / Isobaric</b><small>Piston under constant load · p = constant</small></button>
+<button type="button" class="proc-btn" data-process="isothermal"><b>Constant Temperature / Isothermal</b><small>Slow heat-controlled process · T = constant</small></button>
+<button type="button" class="proc-btn" data-process="adiabatic"><b>Adiabatic</b><small>Rapid insulated process · Q = 0</small></button>
+<button type="button" class="proc-btn" data-process="polytropic"><b>Polytropic</b><small>General process · pVⁿ = constant</small></button>
+</div>
+<div class="lockrow" style="margin-top:10px"><select id="processAnswer" name="process_answer"><option value="">Select your process</option><option value="isochoric">Constant Volume / Isochoric</option><option value="isobaric">Constant Pressure / Isobaric</option><option value="isothermal">Constant Temperature / Isothermal</option><option value="adiabatic">Adiabatic</option><option value="polytropic">Polytropic</option></select><button type="button" class="mini" data-lock="process_answer">🔓</button></div>
+</div>
+</section>
+
+<section class="card">
+<div class="sectiontitle"><span>02</span><div><h2>🔧 GAS PROCESS WORKING MODEL</h2><p>Configure the state, run the model and observe the physical and P–V response.</p></div></div>
+<div class="model-shell">
+<div class="model-top"><h2>LIVE ENGINEERING SIMULATOR</h2><span class="model-status" id="modelStatus">MODEL READY</span></div>
+<div class="model-grid">
+<div class="panel"><div class="panel-title">A · PHYSICAL PISTON–CYLINDER</div><div class="machine"><div class="machine-grid"></div><div class="gauge g1"><div><small>PRESSURE</small><b id="gaugeP">100</b><small> kPa</small></div></div><div class="gauge g2"><div><small>TEMP.</small><b id="gaugeT">300</b><small> K</small></div></div><div class="gauge g3"><div><small>VOLUME</small><b id="gaugeV">0.861</b><small> m³</small></div></div><div class="tag tag1">STATE 1</div><div class="tag tag2">AIR · IDEAL GAS</div><div class="tag tag3" id="conditionTag">READY</div><div class="cyl-outer"><div class="cyl-inner" id="gasFill"></div><div class="piston" id="piston"><div class="rod"></div><div class="load" id="load">LOAD</div></div></div><div class="heat-arrow" id="heatArrow">🔥</div><div class="base"></div><div class="energy"><span id="qChip">Q · —</span><span id="wChip">W · —</span><span id="duChip">ΔU · —</span></div></div></div>
+
+<div class="panel controls"><div class="panel-title">B · CONFIGURATION</div>
+<div class="control-card"><label>MASS OF AIR (kg)</label><input id="mass" type="number" value="1" min="0.1" step="0.1"></div>
+<div class="control-card"><label>INITIAL PRESSURE P₁ (kPa)</label><input id="p1" type="number" value="100" min="1" step="1"></div>
+<div class="control-card"><label>INITIAL TEMPERATURE T₁ (K)</label><input id="t1" type="number" value="300" min="50" step="1"></div>
+<div class="control-card"><label>FINAL VOLUME V₂ (m³)</label><input id="v2" type="number" value="0.517" min="0.05" step="0.001"></div>
+<div class="control-card" id="t2Card"><label>FINAL TEMPERATURE T₂ (K) · FOR ISOCHORIC</label><input id="t2target" type="number" value="330" min="50" step="1"></div>
+<div class="control-card"><label>POLYTROPIC INDEX n · IF SELECTED</label><input id="npoly" type="number" value="1.25" step="0.05"></div>
+<button type="button" class="runbtn" id="runBtn">▶ RUN PROCESS</button><button type="button" class="resetbtn" id="resetBtn">↺ RESET</button>
+<p class="hint" id="processHint">Select a process, configure the state and click RUN PROCESS.</p>
+</div>
+
+<div class="panel pv-panel"><div class="panel-title">C · LIVE P–V BEHAVIOUR</div><div class="pvbox"><svg class="pvsvg" viewBox="0 0 520 300" preserveAspectRatio="none"><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><polygon points="0 0, 7 3.5, 0 7" fill="#2563eb"/></marker></defs><line x1="55" y1="260" x2="495" y2="260" stroke="#64748b" stroke-width="2"/><line x1="55" y1="260" x2="55" y2="24" stroke="#64748b" stroke-width="2"/><text x="475" y="286" font-size="11">V →</text><text x="14" y="35" font-size="11">P ↑</text><path id="pvPath" d="" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/><circle id="pt1" r="7" fill="#16a34a"/><circle id="pt2" r="7" fill="#dc2626"/><text id="state1label" font-size="11" font-weight="800">1</text><text id="state2label" font-size="11" font-weight="800">2</text><text id="curveLabel" x="70" y="48" font-size="11" font-weight="800" fill="#475569">Select process</text></svg></div>
+<div class="legend"><div>🟢 STATE 1 · Initial</div><div>🔴 STATE 2 · Final</div></div>
+<div class="readouts"><div class="readout"><b id="rP1">100</b><span>P₁ kPa</span></div><div class="readout"><b id="rV1">0.861</b><span>V₁ m³</span></div><div class="readout"><b id="rP2">—</b><span>P₂ kPa</span></div><div class="readout"><b id="rT2">—</b><span>T₂ K</span></div></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="card">
+<div class="sectiontitle"><span>03</span><div><h2>📊 DEMONSTRATED RESULT</h2><p>Use the values generated by the working model to prepare your own final calculation.</p></div></div>
+<div class="formula" id="processFormula">No process demonstrated yet.</div>
+<div class="resultgrid" style="margin-top:10px"><div class="result"><b id="resW">—</b><small>W₁₂ · kJ</small></div><div class="result"><b id="resQ">—</b><small>Q₁₂ · kJ</small></div><div class="result"><b id="resDU">—</b><small>ΔU · kJ</small></div><div class="result"><b id="resDH">—</b><small>ΔH · kJ</small></div></div>
+<p class="hint">Sign convention: positive work = work done by the gas. Positive heat = heat supplied to the gas.</p>
+</section>
+
+<form method="post" id="gasForm"><input type="hidden" name="screenshot" id="screenshotInput">
+<section class="card">
+<div class="sectiontitle"><span>04</span><div><h2>📝 YOUR ENGINEERING INTERPRETATION</h2><p>Write your own final response based on the model you developed and demonstrated.</p></div></div>
+<div class="answergrid">
+<div class="answerbox"><label>A · PROCESS & ENGINEERING REASON</label><div class="lockrow"><textarea name="q3_process_reason" placeholder="State the selected process and explain why its condition is appropriate for the given piston–cylinder situation."></textarea><button type="button" class="mini" data-lock="q3_process_reason">🔓</button></div></div>
+<div class="answerbox"><label>B · FINAL STATE CALCULATION</label><div class="lockrow"><textarea name="q3_final_state" placeholder="Show the Chapter 3 relation used and calculate P₂, V₂ and T₂ with units."></textarea><button type="button" class="mini" data-lock="q3_final_state">🔓</button></div></div>
+<div class="answerbox"><label>C · ENERGY ANALYSIS</label><div class="lockrow"><textarea name="q3_energy" placeholder="Determine W₁₂, Q₁₂, ΔU and ΔH. State the sign and meaning of each quantity."></textarea><button type="button" class="mini" data-lock="q3_energy">🔓</button></div></div>
+<div class="answerbox"><label>D · P–V & ENGINEERING INTERPRETATION</label><div class="lockrow"><textarea name="q3_interpretation" placeholder="Interpret the P–V path and explain how pressure, temperature, volume, heat and work behave in the selected process."></textarea><button type="button" class="mini" data-lock="q3_interpretation">🔓</button></div></div>
+</div>
+<div class="notice"><b>PLM evidence:</b> Identify → Configure → Demonstrate → Interpret. Your submitted answer should be consistent with the state shown in the working model.</div>
+</section>
+<section class="submitbar"><div><b>🔐 Answer Security</b><p>Lock individual responses when satisfied. <b>Submit Task 3</b> permanently locks the task.</p></div>{% if task.status!='SUBMITTED' %}<button name="action" value="save" class="secondary">💾 SAVE TASK 3</button><button name="action" value="submit" class="danger" onclick="return confirm('Submit Task 3 permanently? You cannot edit it afterward.')">SUBMIT TASK 3 →</button>{% else %}<div class="perma">🔒 Permanently submitted — no further changes allowed.</div>{% endif %}</section>
+</form>
+</main>
+<script>
+const saved={{ task.answer|tojson }};let state={};try{state=saved?JSON.parse(saved):{}}catch(e){state={}};
+const R=.287,GAMMA=1.4,CP=1.005,CV=.718;const processAnswer=document.getElementById('processAnswer');const cards=[...document.querySelectorAll('.proc-btn')];
+function fmt(x){return Number.isFinite(x)?x.toFixed(3):'—'}
+function current(){return{m:+document.getElementById('mass').value||1,p1:+document.getElementById('p1').value||100,t1:+document.getElementById('t1').value||300,v2:+document.getElementById('v2').value||.517,t2:+document.getElementById('t2target').value||330,n:+document.getElementById('npoly').value||1.25}}
+function choose(p){cards.forEach(c=>c.classList.toggle('active',c.dataset.process===p));processAnswer.value=p;const hints={isochoric:'V = constant · W = 0 · P/T = constant',isobaric:'p = constant · W = p(V₂ − V₁)',isothermal:'T = constant · pV = constant · ΔU = ΔH = 0 for ideal gas',adiabatic:'Q = 0 · pVᵞ = constant',polytropic:'pVⁿ = constant · n is selected by the student'};document.getElementById('processHint').textContent=hints[p]||'Select a process, configure the state and click RUN PROCESS.';document.getElementById('curveLabel').textContent=p?({isochoric:'Isochoric: V = constant',isobaric:'Isobaric: p = constant',isothermal:'Isothermal: T = constant',adiabatic:'Adiabatic: pVᵞ = C',polytropic:'Polytropic: pVⁿ = C'})[p]:'Select process';document.getElementById('t2Card').style.opacity=p==='isochoric'?'1':'.65'}
+cards.forEach(c=>c.addEventListener('click',()=>choose(c.dataset.process)));processAnswer.addEventListener('change',e=>choose(e.target.value));
+function drawPath(proc,p1,v1,p2,v2){if(!proc)return;let N=70,d='',ps=[];for(let i=0;i<=N;i++){let f=i/N,v=v1+(v2-v1)*f,p;if(proc==='isochoric')p=p1;else if(proc==='isobaric')p=p1;else if(proc==='isothermal')p=p1*v1/v;else if(proc==='adiabatic')p=p1*Math.pow(v1/v,GAMMA);else p=p1*Math.pow(v1/v,(+document.getElementById('npoly').value||1.25));ps.push([v,p]);}let pmin=Math.min(...ps.map(a=>a[1]))*.72,pmax=Math.max(...ps.map(a=>a[1]))*1.12,vmin=Math.min(v1,v2),vmax=Math.max(v1,v2),span=Math.max(vmax-vmin,vmax*.25);function xy(v,p){return{x:75+(v-(vmin-span*.08))/(span*1.16)*385,y:245-(p-pmin)/(pmax-pmin)*195}}ps.forEach((a,i)=>{const q=xy(a[0],a[1]);d+=(i?' L ':'M ')+q.x.toFixed(1)+' '+q.y.toFixed(1)});document.getElementById('pvPath').setAttribute('d',d);const a=xy(v1,p1),b=xy(v2,p2);for(const [id,q] of [['pt1',a],['pt2',b]]){document.getElementById(id).setAttribute('cx',q.x);document.getElementById(id).setAttribute('cy',q.y)}document.getElementById('state1label').setAttribute('x',a.x-4);document.getElementById('state1label').setAttribute('y',a.y-12);document.getElementById('state2label').setAttribute('x',b.x+7);document.getElementById('state2label').setAttribute('y',b.y+16)}
+function run(){const s=current(),proc=processAnswer.value;if(!proc){alert('Select the thermodynamic process first.');return}const v1=s.m*R*s.t1/s.p1;let v2=s.v2;if(proc==='isochoric')v2=v1;let p2,t2,W=0,Q=0,dU=0,dH=0,note='';if(proc==='isochoric'){t2=s.t2;p2=s.p1*t2/s.t1;W=0;dU=s.m*CV*(t2-s.t1);dH=s.m*CP*(t2-s.t1);Q=dU;note='Isochoric: volume remains constant. W = 0 and P/T = constant.'}else if(proc==='isobaric'){p2=s.p1;t2=s.t1*(v2/v1);W=s.p1*(v2-v1);dU=s.m*CV*(t2-s.t1);dH=s.m*CP*(t2-s.t1);Q=dU+W;note='Isobaric: pressure remains constant. W = p(V₂ − V₁).'}else if(proc==='isothermal'){t2=s.t1;p2=s.p1*v1/v2;W=s.p1*v1*Math.log(v2/v1);dU=0;dH=0;Q=W;note='Isothermal: temperature remains constant. For an ideal gas ΔU = ΔH = 0.'}else if(proc==='adiabatic'){t2=s.t1*Math.pow(v1/v2,GAMMA-1);p2=s.p1*Math.pow(v1/v2,GAMMA);dU=s.m*CV*(t2-s.t1);dH=s.m*CP*(t2-s.t1);W=-dU;Q=0;note='Adiabatic: Q = 0 and pVᵞ = constant.'}else{const n=s.n;t2=s.t1*Math.pow(v1/v2,n-1);p2=s.p1*Math.pow(v1/v2,n);W=(p2*v2-s.p1*v1)/(1-n);dU=s.m*CV*(t2-s.t1);dH=s.m*CP*(t2-s.t1);Q=dU+W;note='Polytropic: pVⁿ = constant, with n = '+n.toFixed(2)+'.'}
+document.getElementById('rP1').textContent=fmt(s.p1);document.getElementById('rV1').textContent=fmt(v1);document.getElementById('rP2').textContent=fmt(p2);document.getElementById('rT2').textContent=fmt(t2);document.getElementById('resW').textContent=fmt(W);document.getElementById('resQ').textContent=fmt(Q);document.getElementById('resDU').textContent=fmt(dU);document.getElementById('resDH').textContent=fmt(dH);document.getElementById('processFormula').textContent=note;document.getElementById('gaugeP').textContent=fmt(p2);document.getElementById('gaugeT').textContent=fmt(t2);document.getElementById('gaugeV').textContent=fmt(v2);document.getElementById('modelStatus').textContent='PROCESS COMPLETE';document.getElementById('consoleStatus').textContent='SELECTED';document.getElementById('conditionTag').textContent=proc.toUpperCase();document.getElementById('qChip').textContent='Q · '+fmt(Q);document.getElementById('wChip').textContent='W · '+fmt(W);document.getElementById('duChip').textContent='ΔU · '+fmt(dU);document.getElementById('heatArrow').classList.toggle('on',Q>0);document.getElementById('heatArrow').classList.toggle('cool',Q<0);document.getElementById('gasFill').classList.toggle('hot',Q>0);document.getElementById('load').textContent=proc==='isobaric'?'CONSTANT LOAD':proc==='adiabatic'?'INSULATED':'LOAD';let ratio=Math.max(.25,Math.min(1.5,v2/v1));document.getElementById('piston').style.bottom=(42+ratio*35)+'%';document.getElementById('gasFill').style.height=(35+ratio*38)+'%';drawPath(proc,s.p1,v1,p2,v2)}
+function reset(){document.getElementById('mass').value=1;document.getElementById('p1').value=100;document.getElementById('t1').value=300;document.getElementById('v2').value=.517;document.getElementById('t2target').value=330;document.getElementById('npoly').value=1.25;processAnswer.value='';cards.forEach(c=>c.classList.remove('active'));document.getElementById('processFormula').textContent='No process demonstrated yet.';document.getElementById('curveLabel').textContent='Select process';document.getElementById('modelStatus').textContent='MODEL READY';document.getElementById('consoleStatus').textContent='READY';document.getElementById('conditionTag').textContent='READY';document.getElementById('gaugeP').textContent='100';document.getElementById('gaugeT').textContent='300';document.getElementById('gaugeV').textContent='0.861';['rP2','rT2','resW','resQ','resDU','resDH'].forEach(id=>document.getElementById(id).textContent='—');document.getElementById('pvPath').setAttribute('d','');document.getElementById('heatArrow').classList.remove('on','cool')}
+document.getElementById('runBtn').addEventListener('click',run);document.getElementById('resetBtn').addEventListener('click',reset);
+function lockField(name){const el=document.querySelector('[name="'+name+'"]');const b=document.querySelector('[data-lock="'+name+'"]');if(!el)return;el.disabled=!el.disabled;el.classList.toggle('locked-field',el.disabled);if(b)b.textContent=el.disabled?'🔒':'🔓'}document.querySelectorAll('[data-lock]').forEach(b=>b.addEventListener('click',()=>lockField(b.dataset.lock)));
+function collect(){const o={};document.querySelectorAll('#gasForm [name]').forEach(el=>o[el.name]={value:el.value,locked:el.disabled});o.simulator={mass:+document.getElementById('mass').value,p1:+document.getElementById('p1').value,t1:+document.getElementById('t1').value,v2:+document.getElementById('v2').value,t2target:+document.getElementById('t2target').value,npoly:+document.getElementById('npoly').value,process:processAnswer.value};return o}
+if(state){Object.keys(state).forEach(name=>{const el=document.querySelector('[name="'+CSS.escape(name)+'"]');if(el){el.value=state[name]?.value??state[name];if(state[name]?.locked){el.disabled=true;el.classList.add('locked-field');const b=document.querySelector('[data-lock="'+CSS.escape(name)+'"]');if(b)b.textContent='🔒'}}});if(state.simulator){document.getElementById('mass').value=state.simulator.mass??1;document.getElementById('p1').value=state.simulator.p1??100;document.getElementById('t1').value=state.simulator.t1??300;document.getElementById('v2').value=state.simulator.v2??.517;document.getElementById('t2target').value=state.simulator.t2target??330;document.getElementById('npoly').value=state.simulator.npoly??1.25;if(state.simulator.process)choose(state.simulator.process)}}
+document.getElementById('gasForm').addEventListener('submit',()=>{const hidden=document.createElement('input');hidden.type='hidden';hidden.name='answer';hidden.value=JSON.stringify(collect());document.getElementById('gasForm').appendChild(hidden)});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+async function captureFinalAnswerSnapshot(){
+  const form=document.getElementById('fuelForm')||document.getElementById('answerForm')||document.getElementById('f')||document.querySelector('form');
+  const input=document.getElementById('screenshotInput'); if(!form||!input) return true;
+  try{
+    let box=document.getElementById('__finalSnapshot');
+    if(!box){box=document.createElement('div');box.id='__finalSnapshot';document.body.appendChild(box);}
+    box.innerHTML='';
+    box.style.cssText='position:fixed;left:0;top:0;width:1000px;background:#fff;padding:28px;font-family:Arial,sans-serif;color:#172033;z-index:999999;pointer-events:none;opacity:0.98;box-shadow:0 0 0 1px #ddd;';
+    const title=document.createElement('div'); title.innerHTML='<div style="font-size:13px;font-weight:900;color:#4338ca;letter-spacing:1px">PLM MESA EXAMINATION</div><div style="font-size:26px;font-weight:900;margin:6px 0 4px">FINAL ANSWER SNAPSHOT</div><div style="font-size:13px;color:#64748b">{{task.code}} — {{task.title}} · {{session.name}} · {{session.enrollment}}</div>';
+    box.appendChild(title);
+    const table=document.createElement('div'); table.style.marginTop='18px'; table.style.display='grid'; table.style.gap='8px';
+    function row(label,value){const d=document.createElement('div');d.style.cssText='display:grid;grid-template-columns:250px 1fr;gap:10px;padding:10px 12px;border:1px solid #dbe4f0;border-radius:10px;background:#f8fafc;font-size:13px;';d.innerHTML='<b>'+esc(label)+'</b><span>'+esc(value||'Not answered')+'</span>';table.appendChild(d)}
+    function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+    if('{{task.code}}'==='Q2-A'){
+      for(let i=1;i<=10;i++){let c=document.querySelector(`[name="app${String(i).padStart(2,'0')}_category"]`)||document.querySelector(`[name="app${i}_category"]`), f=document.querySelector(`[name="app${String(i).padStart(2,'0')}_fuel"]`)||document.querySelector(`[name="app${i}_fuel"]`), r=document.querySelector(`[name="app${String(i).padStart(2,'0')}_reason"]`)||document.querySelector(`[name="app${i}_reason"]`); if(!c){c=document.querySelector(`[name="app${i}_category"]`);f=document.querySelector(`[name="app${i}_fuel"]`);r=document.querySelector(`[name="app${i}_reason"]`);} row('Application '+i,`Category: ${c?.value||''} | Fuel: ${f?.value||''} | Reason: ${r?.value||''}`)}
+    } else if('{{task.code}}'==='Q3-A'){
+      const active=document.querySelector('.proc-btn.active'); if(active) row('Selected thermodynamic process',active.innerText.replace(/\s+/g,' ').trim());
+      [['P₂',document.getElementById('rP2')?.textContent],['T₂',document.getElementById('rT2')?.textContent],['V₂',document.getElementById('rV2')?.textContent],['Work W',document.getElementById('resW')?.textContent],['Heat Q',document.getElementById('resQ')?.textContent],['ΔU',document.getElementById('resDU')?.textContent],['ΔH',document.getElementById('resDH')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q2-B'){
+      [['Fuel',document.getElementById('fuel')?.value],['Fuel mass',document.getElementById('mass')?.value],['Air supplied',document.getElementById('air')?.value],['O₂ required',document.getElementById('o2')?.textContent],['Theoretical air',document.getElementById('theory')?.textContent],['Air ratio',document.getElementById('ratio')?.textContent],['Combustion condition',document.getElementById('condition')?.textContent]].forEach(x=>{if(x[1])row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q3-B'){
+      [['Gas law',document.getElementById('law')?.value],['P₁ (kPa)',document.getElementById('p1')?.value],['T₁ (K)',document.getElementById('t1')?.value],['V₁ (m³)',document.getElementById('v1')?.value],['P₂ (kPa)',document.getElementById('rp')?.textContent],['T₂ (K)',document.getElementById('rt')?.textContent],['V₂ (m³)',document.getElementById('rv')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q4-B'){
+      [['Condition',document.getElementById('cond')?.value],['Pressure (bar)',document.getElementById('p')?.value],['Dryness fraction x',document.getElementById('x')?.value],['Superheat temperature (°C)',document.getElementById('ts')?.value],['h (kJ/kg)',document.getElementById('h')?.textContent],['v (m³/kg)',document.getElementById('v')?.textContent],['u (kJ/kg)',document.getElementById('u')?.textContent],['s (kJ/kg·K)',document.getElementById('s')?.textContent],['Final steam state',document.getElementById('state')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else {
+      const controls=[...document.querySelectorAll('select,input,textarea')].filter(e=>e.id!=='screenshotInput' && e.name!=='screenshot' && !e.closest('#__finalSnapshot'));
+      controls.forEach(e=>{if(e.type==='hidden')return; let label=e.getAttribute('aria-label')||e.previousElementSibling?.textContent||e.id||e.name||'Field'; let val=e.value; if(val) row(label.trim().slice(0,90),val);});
+      const ans=document.getElementById('answer'); if(ans && ans.value) row('Student engineering evidence',ans.value);
+    }
+    box.appendChild(table);
+    const foot=document.createElement('div');foot.style.cssText='margin-top:16px;padding:10px 12px;border-radius:10px;background:linear-gradient(90deg,#eef2ff,#fce7f3);font-size:12px;font-weight:800;color:#312e81';foot.textContent='Captured at final submission';box.appendChild(foot);
+    const canvas=await html2canvas(box,{backgroundColor:'#ffffff',scale:1.4,useCORS:true,logging:false});
+    input.value=canvas.toDataURL('image/jpeg',0.82);
+    box.remove();
+    return true;
+  }catch(e){console.error('Snapshot failed',e); return true;}
+}
+for(const form of document.querySelectorAll('form')){
+  if(!form.querySelector('#screenshotInput')) continue;
+  form.addEventListener('submit',async function(ev){
+    const submitter=ev.submitter; if(!submitter || submitter.value!=='submit') return;
+    if(form.dataset.snapshotDone==='1') return;
+    ev.preventDefault();
+    if(typeof captureBoilerSnapshot==='function') await captureBoilerSnapshot(); else await captureFinalAnswerSnapshot();
+    form.dataset.snapshotDone='1'; form.submit();
+  });
+}
+</script>
+<script>
+/* PLM FINAL VISUAL RECORD: capture the actual task screen with current saved/selected values. */
+async function captureFinalAnswerSnapshot(){
+  const input=document.getElementById('screenshotInput');
+  const main=document.querySelector('main');
+  if(!input||!main) return true;
+  try{
+    const old=document.getElementById('__finalSnapshot'); if(old) old.remove();
+    const clone=main.cloneNode(true);
+    clone.id='__finalSnapshot';
+    clone.style.cssText='position:absolute;left:-100000px;top:0;width:1180px;background:#fff;padding:22px;font-family:Arial,sans-serif;color:#172033;box-sizing:border-box;';
+    clone.querySelectorAll('script').forEach(x=>x.remove());
+    clone.querySelectorAll('button').forEach(b=>{ if(/save|submit|unlock|lock/i.test(b.textContent||'')) b.remove(); });
+    /* Make every current control visibly readable in the record. */
+    clone.querySelectorAll('select').forEach(el=>{
+      const span=document.createElement('div'); span.textContent=el.options[el.selectedIndex]?.text || 'NIL';
+      span.style.cssText='padding:9px 11px;border:2px solid #93c5fd;border-radius:8px;background:#eff6ff;font-weight:800;color:#1e3a8a;min-height:18px;';
+      el.replaceWith(span);
+    });
+    clone.querySelectorAll('input,textarea').forEach(el=>{
+      if(el.type==='hidden') return;
+      const span=document.createElement('div'); span.textContent=(el.value||'').trim() || 'NIL';
+      span.style.cssText='padding:9px 11px;border:2px solid #cbd5e1;border-radius:8px;background:#f8fafc;font-weight:700;color:#172033;white-space:pre-wrap;min-height:18px;';
+      el.replaceWith(span);
+    });
+    clone.querySelectorAll('iframe').forEach(fr=>{
+      const box=document.createElement('div'); box.style.cssText='height:260px;border:2px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;color:#475569;';
+      box.innerHTML='BOILER WORKING MODEL<br><span style="font-size:12px;font-weight:600">Final nomenclature and engineering answers are shown below.</span>';
+      fr.replaceWith(box);
+    });
+    const banner=document.createElement('div');
+    banner.style.cssText='position:relative;margin:0 0 16px;padding:12px 16px;border-radius:12px;background:linear-gradient(90deg,#eef2ff,#fce7f3);border:2px solid #818cf8;font-weight:900;color:#312e81;';
+    banner.textContent='✓ FINAL SAVED ANSWER RECORD — selections/values shown exactly as saved at this point';
+    clone.insertBefore(banner,clone.firstChild);
+    document.body.appendChild(clone);
+    const canvas=await html2canvas(clone,{backgroundColor:'#ffffff',scale:1.15,useCORS:true,logging:false,windowWidth:1400});
+    input.value=canvas.toDataURL('image/jpeg',0.86);
+    clone.remove();
+    return true;
+  }catch(e){console.error('Visual snapshot failed',e); return true;}
+}
+/* Capture on SAVE and LOCK as well, so the latest saved state is available if the paper times out. */
+document.addEventListener('submit',async function(ev){
+  const form=ev.target;
+  if(!form || !form.querySelector || !form.querySelector('#screenshotInput')) return;
+  const sub=ev.submitter;
+  if(!sub || (sub.value!=='save' && sub.value!=='lock')) return;
+  if(form.dataset.visualSnapshotBusy==='1') return;
+  ev.preventDefault();
+  form.dataset.visualSnapshotBusy='1';
+  await captureFinalAnswerSnapshot();
+  form.submit();
+},false);
+</script></body></html>

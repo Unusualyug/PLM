@@ -1,0 +1,111 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Q3-B Gas Law Laboratory</title><link rel="stylesheet" href="/static/style.css"><style>
+.glhero{background:linear-gradient(135deg,#082f49,#0369a1,#0ea5e9);color:#fff;border-radius:20px;padding:22px}.glhero h1,.glhero h2{color:#fff}.labgrid{display:grid;grid-template-columns:1fr .75fr 1fr;gap:14px}.panel{background:#fff;border:1px solid #dbe2ea;border-radius:18px;padding:15px;box-shadow:0 6px 20px #0000000b}.machine{height:420px;position:relative;background:linear-gradient(#f8fdff,#e0f2fe);border-radius:15px;border:1px solid #bae6fd;overflow:hidden}.cyl{position:absolute;left:27%;right:27%;top:60px;height:260px;border:7px solid #334155;border-radius:22px;background:linear-gradient(90deg,#cbd5e766,#fff,#cbd5e766)}.gas{position:absolute;left:10px;right:10px;bottom:10px;height:68%;border-radius:0 0 14px 14px;background:radial-gradient(circle at 50% 20%,#67e8f9,#0284c7 70%,#075985);transition:.7s}.piston{position:absolute;left:4px;right:4px;bottom:68%;height:25px;background:#475569;border-radius:7px;transition:.7s}.rod{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);width:10px;height:70px;background:#64748b}.gauge{position:absolute;width:70px;height:70px;border:5px solid #475569;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-size:9px}.p{left:15px;top:80px}.t{right:15px;top:80px}.v{right:15px;top:190px}.ctrl label{display:block;font-size:10px;font-weight:900;color:#475569;margin:9px 0 5px}.ctrl select,.ctrl input{width:100%;padding:9px}.run{width:100%;margin-top:13px;background:#0284c7}.graphs{display:grid;grid-template-columns:1fr;gap:8px}.graph{height:105px;border:1px solid #dbeafe;border-radius:10px;background:#f8fdff;position:relative;overflow:hidden}.graph svg{width:100%;height:100%}.read{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.read div{background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:9px;text-align:center}.read b{display:block}.read small{font-size:9px;color:#64748b}.submitbar{position:sticky;bottom:12px;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:15px;padding:12px 15px;box-shadow:0 10px 30px #0002}@media(max-width:900px){.labgrid{grid-template-columns:1fr}.submitbar{flex-direction:column;align-items:stretch}.submitbar button{width:100%}}
+</style></head><body><nav><b>⚙️ PLM MESA</b><span>Paper B · <a href="/student">← Task Dashboard</a></span></nav><main><section class="glhero"><div class="eyebrow">PAPER B · Q3-B · 10 MARKS</div><h1>🧪 Interactive Gas Law Laboratory</h1><p><b>Given Engineering Problem:</b> Investigate a gas state change and select the appropriate gas-law relationship. Configure the virtual apparatus, run the experiment and interpret the measured state.</p></section><section class="card"><h2>VIRTUAL GAS-LAW LABORATORY</h2><div class="labgrid"><div class="panel"><div class="eyebrow">PISTON–CYLINDER</div><div class="machine"><div class="cyl"><div id="gas" class="gas"></div><div id="piston" class="piston"><div class="rod"></div></div></div><div class="gauge p">P<br><b id="gp">100</b> kPa</div><div class="gauge t">T<br><b id="gt">300</b> K</div><div class="gauge v">V<br><b id="gv">0.861</b> m³</div></div></div><div class="panel ctrl"><div class="eyebrow">EXPERIMENT SETUP</div><label>Gas law</label><select id="law"><option value="boyle">Boyle’s Law — T constant</option><option value="charles">Charles’ Law — P constant</option><option value="combined">Combined Gas Law</option></select><label>Initial pressure P₁ (kPa)</label><input id="p1" type="number" value="100"><label>Initial temperature T₁ (K)</label><input id="t1" type="number" value="300"><label>Initial volume V₁ (m³)</label><input id="v1" type="number" value="0.861" step="0.001"><label>Final pressure P₂ (kPa)</label><input id="p2" type="number" value="150"><label>Final temperature T₂ (K)</label><input id="t2" type="number" value="350"><button class="run" id="run" type="button">▶ RUN EXPERIMENT</button><div class="read"><div><b id="rv">—</b><small>V₂ (m³)</small></div><div><b id="rp">—</b><small>P₂ (kPa)</small></div><div><b id="rt">—</b><small>T₂ (K)</small></div><div><b id="lawname">—</b><small>Selected relation</small></div></div></div><div class="panel"><div class="eyebrow">LIVE RELATIONSHIPS</div><div class="graphs"><div class="graph"><svg viewBox="0 0 300 105"><line x1="35" y1="85" x2="280" y2="85" stroke="#94a3b8"/><line x1="35" y1="85" x2="35" y2="15" stroke="#94a3b8"/><path id="curvePV" d="M40 70 Q100 35 270 18" fill="none" stroke="#0284c7" stroke-width="3"/><text x="42" y="15" font-size="9">P–V</text></svg></div><div class="graph"><svg viewBox="0 0 300 105"><line x1="35" y1="85" x2="280" y2="85" stroke="#94a3b8"/><line x1="35" y1="85" x2="35" y2="15" stroke="#94a3b8"/><path id="curveVT" d="M40 78 L270 25" fill="none" stroke="#0f766e" stroke-width="3"/><text x="42" y="15" font-size="9">V–T</text></svg></div><div class="graph"><svg viewBox="0 0 300 105"><line x1="35" y1="85" x2="280" y2="85" stroke="#94a3b8"/><line x1="35" y1="85" x2="35" y2="15" stroke="#94a3b8"/><path id="curvePT" d="M40 75 L270 20" fill="none" stroke="#f59e0b" stroke-width="3"/><text x="42" y="15" font-size="9">P–T</text></svg></div></div><p style="font-size:10px;color:#64748b">Observe which variable is held constant and explain why the selected gas law matches the experiment.</p></div></div></section><section class="card"><h2>STUDENT ENGINEERING EVIDENCE</h2><form method="post"><input type="hidden" name="screenshot" id="screenshotInput"><textarea id="answer" name="answer" rows="8" placeholder="State the selected gas law, show the relationship used, report the final state and give your engineering interpretation.">{{task.answer or ''}}</textarea><div class="submitbar"><div><b>Demonstration record</b><p>Lock/unlock is controlled by the task status.</p></div>{% if task.status!='SUBMITTED' %}<button name="action" value="submit" class="danger" onclick="return confirm('Submit Task 3-B permanently?')">🔴 SUBMIT TASK 3-B →</button>{% else %}<span class="perma">🔒 Permanently submitted</span>{% endif %}</div></form></section></main><script>function run(){let law=document.getElementById('law').value,p1=+document.getElementById('p1').value,t1=+document.getElementById('t1').value,v1=+document.getElementById('v1').value,p2=+document.getElementById('p2').value,t2=+document.getElementById('t2').value,V2=v1;if(law==='boyle'){V2=p1*v1/p2;t2=t1}else if(law==='charles'){p2=p1;V2=v1*t2/t1} else {V2=p1*v1*t2/(p2*t1)}document.getElementById('rv').textContent=V2.toFixed(3);document.getElementById('rp').textContent=p2.toFixed(1);document.getElementById('rt').textContent=t2.toFixed(1);document.getElementById('lawname').textContent=law==='boyle'?'Boyle':law==='charles'?'Charles':'Combined';document.getElementById('gp').textContent=p2.toFixed(0);document.getElementById('gt').textContent=t2.toFixed(0);document.getElementById('gv').textContent=V2.toFixed(3);document.getElementById('piston').style.bottom=Math.max(35,Math.min(78,40+V2/v1*30))+'%';document.getElementById('gas').style.height=Math.max(45,Math.min(80,45+V2/v1*25))+'%'}document.getElementById('run').onclick=run;{% if task.locked or task.status=='SUBMITTED' %}document.getElementById('answer').readOnly=true;{% endif %}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+async function captureFinalAnswerSnapshot(){
+  const form=document.getElementById('fuelForm')||document.getElementById('answerForm')||document.getElementById('f')||document.querySelector('form');
+  const input=document.getElementById('screenshotInput'); if(!form||!input) return true;
+  try{
+    let box=document.getElementById('__finalSnapshot');
+    if(!box){box=document.createElement('div');box.id='__finalSnapshot';document.body.appendChild(box);}
+    box.innerHTML='';
+    box.style.cssText='position:fixed;left:0;top:0;width:1000px;background:#fff;padding:28px;font-family:Arial,sans-serif;color:#172033;z-index:999999;pointer-events:none;opacity:0.98;box-shadow:0 0 0 1px #ddd;';
+    const title=document.createElement('div'); title.innerHTML='<div style="font-size:13px;font-weight:900;color:#4338ca;letter-spacing:1px">PLM MESA EXAMINATION</div><div style="font-size:26px;font-weight:900;margin:6px 0 4px">FINAL ANSWER SNAPSHOT</div><div style="font-size:13px;color:#64748b">{{task.code}} — {{task.title}} · {{session.name}} · {{session.enrollment}}</div>';
+    box.appendChild(title);
+    const table=document.createElement('div'); table.style.marginTop='18px'; table.style.display='grid'; table.style.gap='8px';
+    function row(label,value){const d=document.createElement('div');d.style.cssText='display:grid;grid-template-columns:250px 1fr;gap:10px;padding:10px 12px;border:1px solid #dbe4f0;border-radius:10px;background:#f8fafc;font-size:13px;';d.innerHTML='<b>'+esc(label)+'</b><span>'+esc(value||'Not answered')+'</span>';table.appendChild(d)}
+    function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+    if('{{task.code}}'==='Q2-A'){
+      for(let i=1;i<=10;i++){let c=document.querySelector(`[name="app${String(i).padStart(2,'0')}_category"]`)||document.querySelector(`[name="app${i}_category"]`), f=document.querySelector(`[name="app${String(i).padStart(2,'0')}_fuel"]`)||document.querySelector(`[name="app${i}_fuel"]`), r=document.querySelector(`[name="app${String(i).padStart(2,'0')}_reason"]`)||document.querySelector(`[name="app${i}_reason"]`); if(!c){c=document.querySelector(`[name="app${i}_category"]`);f=document.querySelector(`[name="app${i}_fuel"]`);r=document.querySelector(`[name="app${i}_reason"]`);} row('Application '+i,`Category: ${c?.value||''} | Fuel: ${f?.value||''} | Reason: ${r?.value||''}`)}
+    } else if('{{task.code}}'==='Q3-A'){
+      const active=document.querySelector('.proc-btn.active'); if(active) row('Selected thermodynamic process',active.innerText.replace(/\s+/g,' ').trim());
+      [['P₂',document.getElementById('rP2')?.textContent],['T₂',document.getElementById('rT2')?.textContent],['V₂',document.getElementById('rV2')?.textContent],['Work W',document.getElementById('resW')?.textContent],['Heat Q',document.getElementById('resQ')?.textContent],['ΔU',document.getElementById('resDU')?.textContent],['ΔH',document.getElementById('resDH')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q2-B'){
+      [['Fuel',document.getElementById('fuel')?.value],['Fuel mass',document.getElementById('mass')?.value],['Air supplied',document.getElementById('air')?.value],['O₂ required',document.getElementById('o2')?.textContent],['Theoretical air',document.getElementById('theory')?.textContent],['Air ratio',document.getElementById('ratio')?.textContent],['Combustion condition',document.getElementById('condition')?.textContent]].forEach(x=>{if(x[1])row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q3-B'){
+      [['Gas law',document.getElementById('law')?.value],['P₁ (kPa)',document.getElementById('p1')?.value],['T₁ (K)',document.getElementById('t1')?.value],['V₁ (m³)',document.getElementById('v1')?.value],['P₂ (kPa)',document.getElementById('rp')?.textContent],['T₂ (K)',document.getElementById('rt')?.textContent],['V₂ (m³)',document.getElementById('rv')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q4-B'){
+      [['Condition',document.getElementById('cond')?.value],['Pressure (bar)',document.getElementById('p')?.value],['Dryness fraction x',document.getElementById('x')?.value],['Superheat temperature (°C)',document.getElementById('ts')?.value],['h (kJ/kg)',document.getElementById('h')?.textContent],['v (m³/kg)',document.getElementById('v')?.textContent],['u (kJ/kg)',document.getElementById('u')?.textContent],['s (kJ/kg·K)',document.getElementById('s')?.textContent],['Final steam state',document.getElementById('state')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else {
+      const controls=[...document.querySelectorAll('select,input,textarea')].filter(e=>e.id!=='screenshotInput' && e.name!=='screenshot' && !e.closest('#__finalSnapshot'));
+      controls.forEach(e=>{if(e.type==='hidden')return; let label=e.getAttribute('aria-label')||e.previousElementSibling?.textContent||e.id||e.name||'Field'; let val=e.value; if(val) row(label.trim().slice(0,90),val);});
+      const ans=document.getElementById('answer'); if(ans && ans.value) row('Student engineering evidence',ans.value);
+    }
+    box.appendChild(table);
+    const foot=document.createElement('div');foot.style.cssText='margin-top:16px;padding:10px 12px;border-radius:10px;background:linear-gradient(90deg,#eef2ff,#fce7f3);font-size:12px;font-weight:800;color:#312e81';foot.textContent='Captured at final submission';box.appendChild(foot);
+    const canvas=await html2canvas(box,{backgroundColor:'#ffffff',scale:1.4,useCORS:true,logging:false});
+    input.value=canvas.toDataURL('image/jpeg',0.82);
+    box.remove();
+    return true;
+  }catch(e){console.error('Snapshot failed',e); return true;}
+}
+for(const form of document.querySelectorAll('form')){
+  if(!form.querySelector('#screenshotInput')) continue;
+  form.addEventListener('submit',async function(ev){
+    const submitter=ev.submitter; if(!submitter || submitter.value!=='submit') return;
+    if(form.dataset.snapshotDone==='1') return;
+    ev.preventDefault();
+    if(typeof captureBoilerSnapshot==='function') await captureBoilerSnapshot(); else await captureFinalAnswerSnapshot();
+    form.dataset.snapshotDone='1'; form.submit();
+  });
+}
+</script>
+<script>
+/* PLM FINAL VISUAL RECORD: capture the actual task screen with current saved/selected values. */
+async function captureFinalAnswerSnapshot(){
+  const input=document.getElementById('screenshotInput');
+  const main=document.querySelector('main');
+  if(!input||!main) return true;
+  try{
+    const old=document.getElementById('__finalSnapshot'); if(old) old.remove();
+    const clone=main.cloneNode(true);
+    clone.id='__finalSnapshot';
+    clone.style.cssText='position:absolute;left:-100000px;top:0;width:1180px;background:#fff;padding:22px;font-family:Arial,sans-serif;color:#172033;box-sizing:border-box;';
+    clone.querySelectorAll('script').forEach(x=>x.remove());
+    clone.querySelectorAll('button').forEach(b=>{ if(/save|submit|unlock|lock/i.test(b.textContent||'')) b.remove(); });
+    /* Make every current control visibly readable in the record. */
+    clone.querySelectorAll('select').forEach(el=>{
+      const span=document.createElement('div'); span.textContent=el.options[el.selectedIndex]?.text || 'NIL';
+      span.style.cssText='padding:9px 11px;border:2px solid #93c5fd;border-radius:8px;background:#eff6ff;font-weight:800;color:#1e3a8a;min-height:18px;';
+      el.replaceWith(span);
+    });
+    clone.querySelectorAll('input,textarea').forEach(el=>{
+      if(el.type==='hidden') return;
+      const span=document.createElement('div'); span.textContent=(el.value||'').trim() || 'NIL';
+      span.style.cssText='padding:9px 11px;border:2px solid #cbd5e1;border-radius:8px;background:#f8fafc;font-weight:700;color:#172033;white-space:pre-wrap;min-height:18px;';
+      el.replaceWith(span);
+    });
+    clone.querySelectorAll('iframe').forEach(fr=>{
+      const box=document.createElement('div'); box.style.cssText='height:260px;border:2px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;color:#475569;';
+      box.innerHTML='BOILER WORKING MODEL<br><span style="font-size:12px;font-weight:600">Final nomenclature and engineering answers are shown below.</span>';
+      fr.replaceWith(box);
+    });
+    const banner=document.createElement('div');
+    banner.style.cssText='position:relative;margin:0 0 16px;padding:12px 16px;border-radius:12px;background:linear-gradient(90deg,#eef2ff,#fce7f3);border:2px solid #818cf8;font-weight:900;color:#312e81;';
+    banner.textContent='✓ FINAL SAVED ANSWER RECORD — selections/values shown exactly as saved at this point';
+    clone.insertBefore(banner,clone.firstChild);
+    document.body.appendChild(clone);
+    const canvas=await html2canvas(clone,{backgroundColor:'#ffffff',scale:1.15,useCORS:true,logging:false,windowWidth:1400});
+    input.value=canvas.toDataURL('image/jpeg',0.86);
+    clone.remove();
+    return true;
+  }catch(e){console.error('Visual snapshot failed',e); return true;}
+}
+/* Capture on SAVE and LOCK as well, so the latest saved state is available if the paper times out. */
+document.addEventListener('submit',async function(ev){
+  const form=ev.target;
+  if(!form || !form.querySelector || !form.querySelector('#screenshotInput')) return;
+  const sub=ev.submitter;
+  if(!sub || (sub.value!=='save' && sub.value!=='lock')) return;
+  if(form.dataset.visualSnapshotBusy==='1') return;
+  ev.preventDefault();
+  form.dataset.visualSnapshotBusy='1';
+  await captureFinalAnswerSnapshot();
+  form.submit();
+},false);
+</script></body></html>

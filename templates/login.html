@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PLM Mid Exam 2026</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="login-page">
+<main class="login colorful-login">
+  <div class="login-top-badge">⚙️ PLM EXAMINATION PORTAL</div>
+  <div class="department">MECHANICAL ENGINEERING DEPARTMENT</div>
+  <div class="semester">1ST SEM B.TECH.</div>
+  <h1>PROFICIENT<br>LEARNING METHOD</h1>
+  <div class="exam-pill">MID EXAM 2026</div>
+
+  {% if error %}<div class="err">{{error}}</div>{% endif %}
+
+  <form method="post" action="/login">
+    <label>Username / Enrollment No.</label>
+    <input name="username" autocomplete="username" required>
+    <label>Password</label>
+    <input name="password" type="password" autocomplete="current-password" required>
+    <button>ENTER PORTAL →</button>
+  </form>
+</main>
+</body>
+</html>

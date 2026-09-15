@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset=utf-8><title>{{task.code}} — PLM Task</title><link rel=stylesheet href=/static/style.css></head><body><nav><b>⚙️ PLM MESA</b><a href=/student>← Task Dashboard</a></nav><main><div class=taskhead><div><span class=code>{{task.code}}</span><h1>Task {{task.task_no}} — {{task.title}}</h1><p>{{task.type}} · {{task.marks}} marks</p></div><div class=lockbig>{{'🔒 SUBMITTED' if task.status=='SUBMITTED' else ('🔒 LOCKED' if task.locked else '🔓 EDITABLE')}}</div></div><section class=card><h2>GIVEN ENGINEERING PROBLEM</h2><p class=problem>{{task.prompt}}</p>{% if task.code=='Q001' %}<div class=resource><img src=/static/boiler.png><p><a href=/boiler-model target=_blank>Open Boiler Working Model ↗</a></p></div>{% endif %}<form method=post><input type="hidden" name="screenshot" id="screenshotInput"><label>Your Working / Answer</label><textarea name=answer {% if task.locked or task.status=='SUBMITTED' %}disabled{% endif %}>{{task.answer or ''}}</textarea><div class=actions>{% if task.status!='SUBMITTED' %}{% if task.locked %}<button name=action value=unlock class=secondary>🔒 UNLOCK</button>{% else %}<button name=action value=save class=secondary>💾 SAVE</button><button name=action value=lock>🔒 LOCK ANSWER</button>{% endif %}<button name=action value=submit class=danger onclick="return confirm('Submit permanently? You cannot edit this task afterward.')">SUBMIT TASK →</button>{% else %}<div class=perma>🔒 Permanently submitted — no further changes allowed.</div>{% endif %}</div></form></section></main><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+async function captureFinalAnswerSnapshot(){
+  const form=document.getElementById('fuelForm')||document.getElementById('answerForm')||document.getElementById('f')||document.querySelector('form');
+  const input=document.getElementById('screenshotInput'); if(!form||!input) return true;
+  try{
+    let box=document.getElementById('__finalSnapshot');
+    if(!box){box=document.createElement('div');box.id='__finalSnapshot';document.body.appendChild(box);}
+    box.innerHTML='';
+    box.style.cssText='position:fixed;left:0;top:0;width:1000px;background:#fff;padding:28px;font-family:Arial,sans-serif;color:#172033;z-index:999999;pointer-events:none;opacity:0.98;box-shadow:0 0 0 1px #ddd;';
+    const title=document.createElement('div'); title.innerHTML='<div style="font-size:13px;font-weight:900;color:#4338ca;letter-spacing:1px">PLM MESA EXAMINATION</div><div style="font-size:26px;font-weight:900;margin:6px 0 4px">FINAL ANSWER SNAPSHOT</div><div style="font-size:13px;color:#64748b">{{task.code}} — {{task.title}} · {{session.name}} · {{session.enrollment}}</div>';
+    box.appendChild(title);
+    const table=document.createElement('div'); table.style.marginTop='18px'; table.style.display='grid'; table.style.gap='8px';
+    function row(label,value){const d=document.createElement('div');d.style.cssText='display:grid;grid-template-columns:250px 1fr;gap:10px;padding:10px 12px;border:1px solid #dbe4f0;border-radius:10px;background:#f8fafc;font-size:13px;';d.innerHTML='<b>'+esc(label)+'</b><span>'+esc(value||'Not answered')+'</span>';table.appendChild(d)}
+    function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+    if('{{task.code}}'==='Q2-A'){
+      for(let i=1;i<=10;i++){let c=document.querySelector(`[name="app${String(i).padStart(2,'0')}_category"]`)||document.querySelector(`[name="app${i}_category"]`), f=document.querySelector(`[name="app${String(i).padStart(2,'0')}_fuel"]`)||document.querySelector(`[name="app${i}_fuel"]`), r=document.querySelector(`[name="app${String(i).padStart(2,'0')}_reason"]`)||document.querySelector(`[name="app${i}_reason"]`); if(!c){c=document.querySelector(`[name="app${i}_category"]`);f=document.querySelector(`[name="app${i}_fuel"]`);r=document.querySelector(`[name="app${i}_reason"]`);} row('Application '+i,`Category: ${c?.value||''} | Fuel: ${f?.value||''} | Reason: ${r?.value||''}`)}
+    } else if('{{task.code}}'==='Q3-A'){
+      const active=document.querySelector('.proc-btn.active'); if(active) row('Selected thermodynamic process',active.innerText.replace(/\s+/g,' ').trim());
+      [['P₂',document.getElementById('rP2')?.textContent],['T₂',document.getElementById('rT2')?.textContent],['V₂',document.getElementById('rV2')?.textContent],['Work W',document.getElementById('resW')?.textContent],['Heat Q',document.getElementById('resQ')?.textContent],['ΔU',document.getElementById('resDU')?.textContent],['ΔH',document.getElementById('resDH')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q2-B'){
+      [['Fuel',document.getElementById('fuel')?.value],['Fuel mass',document.getElementById('mass')?.value],['Air supplied',document.getElementById('air')?.value],['O₂ required',document.getElementById('o2')?.textContent],['Theoretical air',document.getElementById('theory')?.textContent],['Air ratio',document.getElementById('ratio')?.textContent],['Combustion condition',document.getElementById('condition')?.textContent]].forEach(x=>{if(x[1])row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q3-B'){
+      [['Gas law',document.getElementById('law')?.value],['P₁ (kPa)',document.getElementById('p1')?.value],['T₁ (K)',document.getElementById('t1')?.value],['V₁ (m³)',document.getElementById('v1')?.value],['P₂ (kPa)',document.getElementById('rp')?.textContent],['T₂ (K)',document.getElementById('rt')?.textContent],['V₂ (m³)',document.getElementById('rv')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q4-B'){
+      [['Condition',document.getElementById('cond')?.value],['Pressure (bar)',document.getElementById('p')?.value],['Dryness fraction x',document.getElementById('x')?.value],['Superheat temperature (°C)',document.getElementById('ts')?.value],['h (kJ/kg)',document.getElementById('h')?.textContent],['v (m³/kg)',document.getElementById('v')?.textContent],['u (kJ/kg)',document.getElementById('u')?.textContent],['s (kJ/kg·K)',document.getElementById('s')?.textContent],['Final steam state',document.getElementById('state')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else {
+      const controls=[...document.querySelectorAll('select,input,textarea')].filter(e=>e.id!=='screenshotInput' && e.name!=='screenshot' && !e.closest('#__finalSnapshot'));
+      controls.forEach(e=>{if(e.type==='hidden')return; let label=e.getAttribute('aria-label')||e.previousElementSibling?.textContent||e.id||e.name||'Field'; let val=e.value; if(val) row(label.trim().slice(0,90),val);});
+      const ans=document.getElementById('answer'); if(ans && ans.value) row('Student engineering evidence',ans.value);
+    }
+    box.appendChild(table);
+    const foot=document.createElement('div');foot.style.cssText='margin-top:16px;padding:10px 12px;border-radius:10px;background:linear-gradient(90deg,#eef2ff,#fce7f3);font-size:12px;font-weight:800;color:#312e81';foot.textContent='Captured at final submission';box.appendChild(foot);
+    const canvas=await html2canvas(box,{backgroundColor:'#ffffff',scale:1.4,useCORS:true,logging:false});
+    input.value=canvas.toDataURL('image/jpeg',0.82);
+    box.remove();
+    return true;
+  }catch(e){console.error('Snapshot failed',e); return true;}
+}
+for(const form of document.querySelectorAll('form')){
+  if(!form.querySelector('#screenshotInput')) continue;
+  form.addEventListener('submit',async function(ev){
+    const submitter=ev.submitter; if(!submitter || submitter.value!=='submit') return;
+    if(form.dataset.snapshotDone==='1') return;
+    ev.preventDefault();
+    if(typeof captureBoilerSnapshot==='function') await captureBoilerSnapshot(); else await captureFinalAnswerSnapshot();
+    form.dataset.snapshotDone='1'; form.submit();
+  });
+}
+</script>
+</body></html>

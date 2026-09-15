@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Q2-B Combustion Analyzer</title><link rel="stylesheet" href="/static/style.css"><style>
+.cbhero{background:linear-gradient(135deg,#431407,#9a3412,#ea580c);color:white;border-radius:20px;padding:22px}.cbhero h1,.cbhero h2{color:white}.cbgrid{display:grid;grid-template-columns:1fr .8fr 1fr;gap:14px}.panel{background:#fff;border:1px solid #dbe2ea;border-radius:18px;padding:15px;box-shadow:0 6px 20px #0000000b}.burner{height:410px;position:relative;border-radius:15px;background:linear-gradient(#fff7ed,#ffedd5);overflow:hidden;border:1px solid #fed7aa}.chamber{position:absolute;left:20%;right:20%;top:70px;height:180px;border:7px solid #57534e;border-radius:18px;background:linear-gradient(#fef3c7,#fb923c,#7c2d12);box-shadow:inset 0 0 35px #7c2d1266}.flame{position:absolute;left:50%;transform:translateX(-50%);bottom:75px;font-size:72px;filter:drop-shadow(0 0 12px #f97316);animation:flicker .45s infinite alternate}.flame.off{opacity:.12;animation:none}.pipe{position:absolute;height:12px;background:#64748b;border-radius:8px}.fuelpipe{left:4%;top:145px;width:20%}.airpipe{left:4%;top:230px;width:20%}.fluepipe{right:4%;top:145px;width:18%}.label{position:absolute;padding:7px 9px;border-radius:8px;background:#292524e8;color:#fff;font-size:9px;font-weight:900}.l1{left:4%;top:110px}.l2{left:4%;top:265px}.l3{right:4%;top:110px}.gauge{position:absolute;right:25px;bottom:30px;background:#fff;border:4px solid #475569;border-radius:50%;width:74px;height:74px;display:grid;place-items:center;text-align:center}.gauge b{font-size:11px}.controls label{display:block;font-size:10px;font-weight:900;color:#475569;margin:10px 0 5px}.controls input,.controls select{width:100%;padding:9px}.run{width:100%;margin-top:14px;background:#ea580c}.results{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.res{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px;text-align:center}.res b{display:block;font-size:16px}.res small{font-size:9px;color:#64748b}.evidence textarea{min-height:90px}.lockrow{display:flex;gap:7px}.lockrow textarea{flex:1}.mini{min-width:45px}.statusok{padding:8px;border-radius:9px;background:#dcfce7;color:#166534;font-size:10px;font-weight:900}.submitbar{position:sticky;bottom:12px;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:15px;padding:12px 15px;box-shadow:0 10px 30px #0002}@media(max-width:900px){.cbgrid{grid-template-columns:1fr}.submitbar{flex-direction:column;align-items:stretch}.submitbar button{width:100%}}
+</style></head><body><nav><b>🔥 PLM MESA</b><span>Paper B · <a href="/student">← Task Dashboard</a></span></nav><main>
+<section class="cbhero"><div class="eyebrow">PAPER B · Q2-B · 10 MARKS</div><h1>🔥 Interactive Combustion & Air Requirement Analyzer</h1><p><b>Given Engineering Problem:</b> Select a fuel, use its composition to determine oxygen and theoretical air requirement, compare the air supplied and demonstrate the combustion condition.</p></section>
+<section class="card"><h2>LIVE COMBUSTION WORKING MODEL</h2><div class="cbgrid"><div class="panel"><div class="eyebrow">VISUAL BURNER</div><div class="burner"><div class="pipe fuelpipe"></div><div class="pipe airpipe"></div><div class="pipe fluepipe"></div><div class="label l1">FUEL INLET</div><div class="label l2">AIR SUPPLY</div><div class="label l3">FLUE GAS</div><div class="chamber"></div><div id="flame" class="flame off">🔥</div><div class="gauge"><div><small>COMBUSTION</small><br><b id="gauge">READY</b></div></div></div></div>
+<div class="panel controls"><div class="eyebrow">STUDENT CONFIGURATION</div><label>Fuel</label><select id="fuel"><option value="CH4">Natural Gas / CH₄</option><option value="C3H8">Propane / C₃H₈</option><option value="CO">Carbon Monoxide / CO</option><option value="H2">Hydrogen / H₂</option><option value="C">Carbon / C</option></select><label>Fuel amount (kg)</label><input id="mass" type="number" value="1" min="0.1" step="0.1"><label>Air supplied (kg)</label><input id="air" type="number" value="17.2" min="0" step="0.1"><button class="run" type="button" id="run">▶ START COMBUSTION</button><div class="results"><div class="res"><b id="o2">—</b><small>O₂ required (kg)</small></div><div class="res"><b id="theory">—</b><small>Theoretical air (kg)</small></div><div class="res"><b id="ratio">—</b><small>Air / theory</small></div><div class="res"><b id="condition">—</b><small>Condition</small></div></div></div>
+<div class="panel"><div class="eyebrow">ENGINEERING INTERPRETATION</div><div class="statusok" id="status">Run the model to obtain the result.</div><div style="margin-top:12px"><b>What to submit</b><ol style="font-size:11px;line-height:1.7"><li>Selected fuel and fuel type.</li><li>Oxygen requirement.</li><li>Theoretical air requirement.</li><li>Compare supplied air with theoretical air.</li><li>State whether combustion air is sufficient and justify.</li></ol></div></div></div></section>
+<section class="card evidence"><h2>STUDENT ENGINEERING EVIDENCE</h2><form method="post" id="f"><input type="hidden" name="screenshot" id="screenshotInput"><div class="lockrow"><textarea id="answer" name="answer" placeholder="Enter your demonstrated fuel selection, calculations and engineering justification...">{{task.answer or ''}}</textarea><button type="button" class="mini" id="lock">🔒</button></div><div class="submitbar"><div><b>{{'🔒 Permanently submitted' if task.status=='SUBMITTED' else 'Record your demonstrated result'}}</b><p>Lock before final submission if required.</p></div>{% if task.status!='SUBMITTED' %}<button class="danger" name="action" value="submit" type="submit" onclick="return confirm('Submit Task 2-B permanently?')">🔴 SUBMIT TASK 2-B →</button>{% else %}<span class="perma">No further changes allowed.</span>{% endif %}</div></form></section></main>
+<script>const data={CH4:{o2:4,air:4/0.233},C3H8:{o2:3.636,air:3.636/0.233},CO:{o2:0.571,air:0.571/0.233},H2:{o2:8,air:8/0.233},C:{o2:2.667,air:2.667/0.233}};function run(){let f=document.getElementById('fuel').value,m=+document.getElementById('mass').value,a=+document.getElementById('air').value,d=data[f],o=d.o2*m,t=d.air*m,r=a/t;document.getElementById('o2').textContent=o.toFixed(2);document.getElementById('theory').textContent=t.toFixed(2);document.getElementById('ratio').textContent=r.toFixed(2)+'×';let ok=a>=t*.98;document.getElementById('condition').textContent=ok?'SUFFICIENT':'INSUFFICIENT';document.getElementById('status').textContent=ok?'Air supplied is approximately sufficient or in excess. Interpret the result in your working.':'Air supplied is below the theoretical requirement; combustion air is insufficient.';document.getElementById('gauge').textContent=ok?'STABLE':'LOW AIR';document.getElementById('flame').classList.remove('off')}document.getElementById('run').onclick=run;document.getElementById('lock').onclick=()=>{let x=document.getElementById('answer');x.disabled=!x.disabled;document.getElementById('lock').textContent=x.disabled?'🔓':'🔒'};{% if task.locked or task.status=='SUBMITTED' %}document.getElementById('answer').disabled=true;document.getElementById('lock').textContent='🔓';{% endif %}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+async function captureFinalAnswerSnapshot(){
+  const form=document.getElementById('fuelForm')||document.getElementById('answerForm')||document.getElementById('f')||document.querySelector('form');
+  const input=document.getElementById('screenshotInput'); if(!form||!input) return true;
+  try{
+    let box=document.getElementById('__finalSnapshot');
+    if(!box){box=document.createElement('div');box.id='__finalSnapshot';document.body.appendChild(box);}
+    box.innerHTML='';
+    box.style.cssText='position:fixed;left:0;top:0;width:1000px;background:#fff;padding:28px;font-family:Arial,sans-serif;color:#172033;z-index:999999;pointer-events:none;opacity:0.98;box-shadow:0 0 0 1px #ddd;';
+    const title=document.createElement('div'); title.innerHTML='<div style="font-size:13px;font-weight:900;color:#4338ca;letter-spacing:1px">PLM MESA EXAMINATION</div><div style="font-size:26px;font-weight:900;margin:6px 0 4px">FINAL ANSWER SNAPSHOT</div><div style="font-size:13px;color:#64748b">{{task.code}} — {{task.title}} · {{session.name}} · {{session.enrollment}}</div>';
+    box.appendChild(title);
+    const table=document.createElement('div'); table.style.marginTop='18px'; table.style.display='grid'; table.style.gap='8px';
+    function row(label,value){const d=document.createElement('div');d.style.cssText='display:grid;grid-template-columns:250px 1fr;gap:10px;padding:10px 12px;border:1px solid #dbe4f0;border-radius:10px;background:#f8fafc;font-size:13px;';d.innerHTML='<b>'+esc(label)+'</b><span>'+esc(value||'Not answered')+'</span>';table.appendChild(d)}
+    function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+    if('{{task.code}}'==='Q2-A'){
+      for(let i=1;i<=10;i++){let c=document.querySelector(`[name="app${String(i).padStart(2,'0')}_category"]`)||document.querySelector(`[name="app${i}_category"]`), f=document.querySelector(`[name="app${String(i).padStart(2,'0')}_fuel"]`)||document.querySelector(`[name="app${i}_fuel"]`), r=document.querySelector(`[name="app${String(i).padStart(2,'0')}_reason"]`)||document.querySelector(`[name="app${i}_reason"]`); if(!c){c=document.querySelector(`[name="app${i}_category"]`);f=document.querySelector(`[name="app${i}_fuel"]`);r=document.querySelector(`[name="app${i}_reason"]`);} row('Application '+i,`Category: ${c?.value||''} | Fuel: ${f?.value||''} | Reason: ${r?.value||''}`)}
+    } else if('{{task.code}}'==='Q3-A'){
+      const active=document.querySelector('.proc-btn.active'); if(active) row('Selected thermodynamic process',active.innerText.replace(/\s+/g,' ').trim());
+      [['P₂',document.getElementById('rP2')?.textContent],['T₂',document.getElementById('rT2')?.textContent],['V₂',document.getElementById('rV2')?.textContent],['Work W',document.getElementById('resW')?.textContent],['Heat Q',document.getElementById('resQ')?.textContent],['ΔU',document.getElementById('resDU')?.textContent],['ΔH',document.getElementById('resDH')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q2-B'){
+      [['Fuel',document.getElementById('fuel')?.value],['Fuel mass',document.getElementById('mass')?.value],['Air supplied',document.getElementById('air')?.value],['O₂ required',document.getElementById('o2')?.textContent],['Theoretical air',document.getElementById('theory')?.textContent],['Air ratio',document.getElementById('ratio')?.textContent],['Combustion condition',document.getElementById('condition')?.textContent]].forEach(x=>{if(x[1])row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q3-B'){
+      [['Gas law',document.getElementById('law')?.value],['P₁ (kPa)',document.getElementById('p1')?.value],['T₁ (K)',document.getElementById('t1')?.value],['V₁ (m³)',document.getElementById('v1')?.value],['P₂ (kPa)',document.getElementById('rp')?.textContent],['T₂ (K)',document.getElementById('rt')?.textContent],['V₂ (m³)',document.getElementById('rv')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q4-B'){
+      [['Condition',document.getElementById('cond')?.value],['Pressure (bar)',document.getElementById('p')?.value],['Dryness fraction x',document.getElementById('x')?.value],['Superheat temperature (°C)',document.getElementById('ts')?.value],['h (kJ/kg)',document.getElementById('h')?.textContent],['v (m³/kg)',document.getElementById('v')?.textContent],['u (kJ/kg)',document.getElementById('u')?.textContent],['s (kJ/kg·K)',document.getElementById('s')?.textContent],['Final steam state',document.getElementById('state')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else {
+      const controls=[...document.querySelectorAll('select,input,textarea')].filter(e=>e.id!=='screenshotInput' && e.name!=='screenshot' && !e.closest('#__finalSnapshot'));
+      controls.forEach(e=>{if(e.type==='hidden')return; let label=e.getAttribute('aria-label')||e.previousElementSibling?.textContent||e.id||e.name||'Field'; let val=e.value; if(val) row(label.trim().slice(0,90),val);});
+      const ans=document.getElementById('answer'); if(ans && ans.value) row('Student engineering evidence',ans.value);
+    }
+    box.appendChild(table);
+    const foot=document.createElement('div');foot.style.cssText='margin-top:16px;padding:10px 12px;border-radius:10px;background:linear-gradient(90deg,#eef2ff,#fce7f3);font-size:12px;font-weight:800;color:#312e81';foot.textContent='Captured at final submission';box.appendChild(foot);
+    const canvas=await html2canvas(box,{backgroundColor:'#ffffff',scale:1.4,useCORS:true,logging:false});
+    input.value=canvas.toDataURL('image/jpeg',0.82);
+    box.remove();
+    return true;
+  }catch(e){console.error('Snapshot failed',e); return true;}
+}
+for(const form of document.querySelectorAll('form')){
+  if(!form.querySelector('#screenshotInput')) continue;
+  form.addEventListener('submit',async function(ev){
+    const submitter=ev.submitter; if(!submitter || submitter.value!=='submit') return;
+    if(form.dataset.snapshotDone==='1') return;
+    ev.preventDefault();
+    if(typeof captureBoilerSnapshot==='function') await captureBoilerSnapshot(); else await captureFinalAnswerSnapshot();
+    form.dataset.snapshotDone='1'; form.submit();
+  });
+}
+</script>
+<script>
+/* PLM FINAL VISUAL RECORD: capture the actual task screen with current saved/selected values. */
+async function captureFinalAnswerSnapshot(){
+  const input=document.getElementById('screenshotInput');
+  const main=document.querySelector('main');
+  if(!input||!main) return true;
+  try{
+    const old=document.getElementById('__finalSnapshot'); if(old) old.remove();
+    const clone=main.cloneNode(true);
+    clone.id='__finalSnapshot';
+    clone.style.cssText='position:absolute;left:-100000px;top:0;width:1180px;background:#fff;padding:22px;font-family:Arial,sans-serif;color:#172033;box-sizing:border-box;';
+    clone.querySelectorAll('script').forEach(x=>x.remove());
+    clone.querySelectorAll('button').forEach(b=>{ if(/save|submit|unlock|lock/i.test(b.textContent||'')) b.remove(); });
+    /* Make every current control visibly readable in the record. */
+    clone.querySelectorAll('select').forEach(el=>{
+      const span=document.createElement('div'); span.textContent=el.options[el.selectedIndex]?.text || 'NIL';
+      span.style.cssText='padding:9px 11px;border:2px solid #93c5fd;border-radius:8px;background:#eff6ff;font-weight:800;color:#1e3a8a;min-height:18px;';
+      el.replaceWith(span);
+    });
+    clone.querySelectorAll('input,textarea').forEach(el=>{
+      if(el.type==='hidden') return;
+      const span=document.createElement('div'); span.textContent=(el.value||'').trim() || 'NIL';
+      span.style.cssText='padding:9px 11px;border:2px solid #cbd5e1;border-radius:8px;background:#f8fafc;font-weight:700;color:#172033;white-space:pre-wrap;min-height:18px;';
+      el.replaceWith(span);
+    });
+    clone.querySelectorAll('iframe').forEach(fr=>{
+      const box=document.createElement('div'); box.style.cssText='height:260px;border:2px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;color:#475569;';
+      box.innerHTML='BOILER WORKING MODEL<br><span style="font-size:12px;font-weight:600">Final nomenclature and engineering answers are shown below.</span>';
+      fr.replaceWith(box);
+    });
+    const banner=document.createElement('div');
+    banner.style.cssText='position:relative;margin:0 0 16px;padding:12px 16px;border-radius:12px;background:linear-gradient(90deg,#eef2ff,#fce7f3);border:2px solid #818cf8;font-weight:900;color:#312e81;';
+    banner.textContent='✓ FINAL SAVED ANSWER RECORD — selections/values shown exactly as saved at this point';
+    clone.insertBefore(banner,clone.firstChild);
+    document.body.appendChild(clone);
+    const canvas=await html2canvas(clone,{backgroundColor:'#ffffff',scale:1.15,useCORS:true,logging:false,windowWidth:1400});
+    input.value=canvas.toDataURL('image/jpeg',0.86);
+    clone.remove();
+    return true;
+  }catch(e){console.error('Visual snapshot failed',e); return true;}
+}
+/* Capture on SAVE and LOCK as well, so the latest saved state is available if the paper times out. */
+document.addEventListener('submit',async function(ev){
+  const form=ev.target;
+  if(!form || !form.querySelector || !form.querySelector('#screenshotInput')) return;
+  const sub=ev.submitter;
+  if(!sub || (sub.value!=='save' && sub.value!=='lock')) return;
+  if(form.dataset.visualSnapshotBusy==='1') return;
+  ev.preventDefault();
+  form.dataset.visualSnapshotBusy='1';
+  await captureFinalAnswerSnapshot();
+  form.submit();
+},false);
+</script></body></html>

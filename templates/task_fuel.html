@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Q002 — Fuel Selection Challenge</title>
+<link rel="stylesheet" href="/static/style.css">
+<style>
+.q2hero{background:linear-gradient(135deg,#fff7ed,#eff6ff);border:1px solid #dbeafe}.q2note{background:#f8fafc;border-left:4px solid #f59e0b;padding:14px 16px;border-radius:10px;margin-top:14px}.app-card{border:1px solid #e2e8f0;border-radius:16px;margin:16px 0;overflow:hidden;background:#fff;box-shadow:0 5px 18px rgba(15,23,42,.05)}.app-head{display:flex;align-items:center;gap:12px;padding:14px 18px;background:linear-gradient(90deg,#f8fafc,#fff)}.app-no{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#0f172a;color:#fff;font-weight:800}.app-head h3{margin:0;font-size:16px}.app-head p{margin:3px 0 0;color:#64748b;font-size:12px}.app-main-grid{display:grid;grid-template-columns:260px 1fr;gap:0;border-top:1px solid #eef2f7}.app-image-wrap{padding:16px;border-right:1px solid #eef2f7;background:#f8fafc;display:flex;flex-direction:column;justify-content:flex-start}.app-image{width:100%;height:170px;object-fit:cover;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 3px 12px rgba(15,23,42,.08)}.image-caption{font-size:10px;color:#64748b;margin-top:7px;text-align:center}.selection-grid{display:grid;grid-template-columns:1fr 1.35fr 1.8fr;gap:12px;padding:16px}.choice-box{border:1px solid #e2e8f0;border-radius:12px;padding:12px;background:#fafafa}.choice-box label{display:block;font-weight:700;font-size:12px;margin-bottom:7px;color:#334155}.lockrow{display:flex;gap:7px;align-items:stretch}.lockrow select,.lockrow textarea{flex:1;min-width:0}.mini{border:1px solid #cbd5e1;background:#fff;border-radius:9px;padding:0 10px;cursor:pointer;font-size:16px}.mini:hover{background:#f1f5f9}.choice-box textarea{min-height:68px;resize:vertical}.locked-field{background:#f1f5f9!important;color:#64748b}.app-footer{padding:0 16px 15px;color:#64748b;font-size:12px}.q2progress{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}.q2progress div{padding:10px;border-radius:10px;background:#fff;border:1px solid #e2e8f0;text-align:center;font-weight:700;font-size:11px}.q2progress .on{background:#eff6ff;border-color:#93c5fd;color:#1d4ed8}.summary-strip{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.pill{padding:7px 10px;border-radius:999px;background:#f1f5f9;font-size:12px;font-weight:700}.modbox{display:flex;gap:14px;align-items:flex-start}.modicon{font-size:28px}.disabled-note{opacity:.65}@media(max-width:950px){.app-main-grid{grid-template-columns:1fr}.app-image-wrap{border-right:0;border-bottom:1px solid #eef2f7}.app-image{height:220px}.selection-grid{grid-template-columns:1fr}}@media(max-width:600px){.q2progress{grid-template-columns:1fr}.app-image{height:180px}.app-head{align-items:flex-start}}
+</style>
+</head>
+<body>
+<nav><b>🔥 PLM MESA</b><a href="/student">← Task Dashboard</a></nav>
+<main>
+<div class="taskhead"><div><span class="code">{{task.code}}</span><h1>Task {{task.task_no}} — Fuel Selection Challenge</h1><p>Chapter 2 · Fuels and Combustion · {{task.marks}} marks</p></div><div class="lockbig" id="taskStatus">{{'🔒 SUBMITTED' if task.status=='SUBMITTED' else '🟡 IN PROGRESS'}}</div></div>
+
+<section class="card q2hero">
+<div class="eyebrow">PFL ENGINEERING CHALLENGE · CHAPTER 2</div>
+<h2>🔥 Select the Most Appropriate Fuel</h2>
+<p><b>Given Engineering Problem:</b> You are working as a Mechanical Engineer responsible for selecting a suitable fuel for different engineering applications. For each application, select the appropriate <b>fuel category</b>, select a suitable <b>fuel</b> from that category, and give an <b>engineering reason</b> for your selection.</p>
+<div class="q2note"><b>Student instruction:</b> Do not select a fuel only because it has a high calorific value. Consider the requirements of the particular application and justify your engineering decision using relevant fuel properties and practical considerations.</div>
+<div class="q2progress"><div class="on">01 SELECT<br><small>Category</small></div><div class="on">02 SELECT<br><small>Fuel</small></div><div class="on">03 JUSTIFY<br><small>Engineering Reason</small></div></div>
+<div class="summary-strip"><span class="pill">10 Applications</span><span class="pill">3 Decision Boxes / Application</span><span class="pill">🔓 Edit → 🔒 Lock</span><span class="pill">10 Applications · 20 Marks</span><span class="pill">Final submission is permanent</span></div>
+</section>
+
+<form method="post" id="fuelForm"><input type="hidden" name="screenshot" id="screenshotInput">
+<section class="card">
+<div class="sectiontitle"><span>01</span><div><h2>FUEL SELECTION MATRIX</h2><p>For every application: study the real application → choose fuel category → choose fuel → justify the engineering decision.</p></div></div>
+
+{% set applications = [
+('01','Domestic cooking','Cooking fuel for a domestic household.'),
+('02','Steam generation in a boiler','Fuel for a boiler used to raise steam.'),
+('03','Spark-ignition engine','Fuel for a spark-ignition petrol engine.'),
+('04','Diesel engine / power generation','Fuel for a diesel engine used for power generation.'),
+('05','Oil-fired furnace / heating','Fuel for an industrial furnace or heating application.'),
+('06','Blast furnace operation','Fuel used in a metallurgical blast-furnace application.'),
+('07','Steel / open-hearth furnace','Fuel for a high-temperature metallurgical heating application.'),
+('08','Street or domestic gas lighting','Fuel for a gas-lighting application.'),
+('09','Rural / community biogas plant','Fuel/energy source associated with waste-based biogas production.'),
+('10','IC engine where gaseous fuel is preferred','An IC-engine application in which a gaseous fuel is selected as the preferred fuel.')
+] %}
+
+{% set app_images = {
+'01':'/static/q2images/app1.jpg',
+'02':'/static/q2images/app2.jpg',
+'03':'/static/q2images/app3.jpg',
+'04':'/static/q2images/app4.jpg',
+'05':'/static/q2images/app5.jpg',
+'06':'/static/q2images/app6.jpg',
+'07':'/static/q2images/app7.jpg',
+'08':'/static/q2images/app8.jpg',
+'09':'/static/q2images/app9.jpg',
+'10':'/static/q2images/app10.jpg'
+} %}
+
+{% set solids = ['Wood','Peat','Lignite','Bituminous Coal','Anthracite','Wood Charcoal','Coke','Briquetted Coal','Pulverised Coal'] %}
+{% set liquids = ['Petrol','Kerosene','Diesel Oil','Benzene','Alcohol','Coal Tar Oil','Tar Oil','Shale Oil','Natural Gas Oil'] %}
+{% set gases = ['Natural Gas','Coal Gas (Town Gas)','Coke-Oven Gas','Blast Furnace Gas','Producer Gas','Water Gas','Sewer Gas','LPG','LNG','CNG'] %}
+
+{% for num,title,desc in applications %}
+<div class="app-card" data-app="{{num}}">
+  <div class="app-head"><div class="app-no">{{num}}</div><div><h3>{{title}}</h3><p>{{desc}}</p></div></div>
+  <div class="app-main-grid">
+    <div class="app-image-wrap"><img class="app-image" src="{{ app_images[num] }}" alt="{{title}}" loading="lazy"><div class="image-caption">Engineering application illustration</div></div>
+    <div class="selection-grid">
+    <div class="choice-box">
+      <label>BOX 1 · FUEL CATEGORY</label>
+      <div class="lockrow">
+        <select name="app{{num}}_category" data-app="{{num}}" data-kind="category" {% if task.status=='SUBMITTED' %}disabled{% endif %}>
+          <option value="">Select category</option><option>Solid</option><option>Liquid</option><option>Gaseous</option>
+        </select><button type="button" class="mini" data-lock="app{{num}}_category">🔓</button>
+      </div>
+    </div>
+    <div class="choice-box">
+      <label>BOX 2 · SELECT FUEL</label>
+      <div class="lockrow">
+        <select name="app{{num}}_fuel" data-app="{{num}}" data-kind="fuel" disabled {% if task.status=='SUBMITTED' %}disabled{% endif %}>
+          <option value="">First select category</option>
+        </select><button type="button" class="mini" data-lock="app{{num}}_fuel">🔓</button>
+      </div>
+    </div>
+    <div class="choice-box">
+      <label>BOX 3 · ENGINEERING REASON FOR FUEL SELECTION</label>
+      <div class="lockrow">
+        <textarea name="app{{num}}_reason" placeholder="Why is this fuel appropriate for this application? Consider relevant properties, handling, storage, combustion, availability, etc." {% if task.status=='SUBMITTED' %}disabled{% endif %}></textarea><button type="button" class="mini" data-lock="app{{num}}_reason">🔓</button>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="app-footer">Each box can be locked independently. A locked answer cannot be edited until you unlock it.</div>
+</div>
+{% endfor %}
+</section>
+
+
+
+
+
+<section class="submitbar"><div><b>🔐 Answer Security</b><p>Lock individual answers whenever you are satisfied. <b>Submit Task 2</b> permanently locks all answers and prevents further editing.</p></div>{% if task.status!='SUBMITTED' %}<button name="action" value="save" class="secondary">💾 SAVE TASK 2</button><button name="action" value="submit" class="danger" onclick="return confirm('Submit Task 2 permanently? You cannot edit it afterward.')">SUBMIT TASK 2 →</button>{% else %}<div class="perma">🔒 Permanently submitted — no further changes allowed.</div>{% endif %}</section>
+</form>
+</main>
+<script>
+const FUEL_OPTIONS={
+  Solid: {{solids|tojson}},
+  Liquid: {{liquids|tojson}},
+  Gaseous: {{gases|tojson}}
+};
+const saved={{ task.answer|tojson }}; let state={}; try{state=saved?JSON.parse(saved):{}}catch(e){state={}};
+const categorySelects=[...document.querySelectorAll('select[data-kind="category"]')];
+function applyFuelOptions(cat, selected){
+  const app=cat.dataset.app, fuel=document.querySelector('select[name="app'+app+'_fuel"]');
+  if(!fuel) return;
+  const locked=fuel.disabled && fuel.dataset.userLocked==='1';
+  const wasDisabled=fuel.disabled;
+  fuel.innerHTML='';
+  if(!cat.value){ fuel.add(new Option('First select category','')); fuel.disabled=true; return; }
+  fuel.add(new Option('Select fuel',''));
+  (FUEL_OPTIONS[cat.value]||[]).forEach(v=>fuel.add(new Option(v,v)));
+  if(selected!==undefined) fuel.value=selected;
+  if(!wasDisabled || !locked) fuel.disabled=false;
+}
+function setValue(el,v){
+  if(v!==undefined && v!==null) el.value=v;
+}
+categorySelects.forEach(cat=>{
+  const key=cat.name, savedVal=state[key]?.value ?? state[key];
+  if(savedVal) cat.value=savedVal;
+  applyFuelOptions(cat, state['app'+cat.dataset.app+'_fuel']?.value ?? state['app'+cat.dataset.app+'_fuel']);
+  cat.addEventListener('change',()=>{ applyFuelOptions(cat,''); });
+});
+Object.keys(state).forEach(name=>{
+  const el=document.querySelector('[name="'+CSS.escape(name)+'"]'); if(!el)return;
+  const v=state[name]?.value ?? state[name]; setValue(el,v);
+  if(state[name]?.locked && name.indexOf('_category')<0){ el.disabled=true; el.classList.add('locked-field'); }
+});
+// Re-apply fuel lists after restoring category values.
+categorySelects.forEach(cat=>applyFuelOptions(cat,state['app'+cat.dataset.app+'_fuel']?.value ?? state['app'+cat.dataset.app+'_fuel']));
+Object.keys(state).forEach(name=>{const el=document.querySelector('[name="'+CSS.escape(name)+'"]');if(el&&state[name]?.value!==undefined)el.value=state[name].value;if(el&&state[name]?.locked){el.disabled=true;el.classList.add('locked-field');const b=document.querySelector('[data-lock="'+CSS.escape(name)+'"]');if(b)b.textContent='🔒';}});
+function lockField(name){
+  const el=document.querySelector('[name="'+CSS.escape(name)+'"]'); const btn=document.querySelector('[data-lock="'+CSS.escape(name)+'"]'); if(!el)return;
+  if(name.endsWith('_fuel') && !el.value && el.disabled && !el.dataset.userLocked){ return; }
+  el.disabled=!el.disabled; el.dataset.userLocked=el.disabled?'1':'0'; el.classList.toggle('locked-field',el.disabled); if(btn)btn.textContent=el.disabled?'🔒':'🔓';
+}
+document.querySelectorAll('[data-lock]').forEach(b=>b.addEventListener('click',()=>lockField(b.dataset.lock)));
+function collect(){
+ const o={}; document.querySelectorAll('[name]').forEach(el=>{o[el.name]={value:el.value,locked:el.disabled}}); return o;
+}
+document.getElementById('fuelForm').addEventListener('submit',()=>{const hidden=document.createElement('input');hidden.type='hidden';hidden.name='answer';hidden.value=JSON.stringify(collect());document.getElementById('fuelForm').appendChild(hidden);});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+async function captureFinalAnswerSnapshot(){
+  const form=document.getElementById('fuelForm')||document.getElementById('answerForm')||document.getElementById('f')||document.querySelector('form');
+  const input=document.getElementById('screenshotInput'); if(!form||!input) return true;
+  try{
+    let box=document.getElementById('__finalSnapshot');
+    if(!box){box=document.createElement('div');box.id='__finalSnapshot';document.body.appendChild(box);}
+    box.innerHTML='';
+    box.style.cssText='position:fixed;left:0;top:0;width:1000px;background:#fff;padding:28px;font-family:Arial,sans-serif;color:#172033;z-index:999999;pointer-events:none;opacity:0.98;box-shadow:0 0 0 1px #ddd;';
+    const title=document.createElement('div'); title.innerHTML='<div style="font-size:13px;font-weight:900;color:#4338ca;letter-spacing:1px">PLM MESA EXAMINATION</div><div style="font-size:26px;font-weight:900;margin:6px 0 4px">FINAL ANSWER SNAPSHOT</div><div style="font-size:13px;color:#64748b">{{task.code}} — {{task.title}} · {{session.name}} · {{session.enrollment}}</div>';
+    box.appendChild(title);
+    const table=document.createElement('div'); table.style.marginTop='18px'; table.style.display='grid'; table.style.gap='8px';
+    function row(label,value){const d=document.createElement('div');d.style.cssText='display:grid;grid-template-columns:250px 1fr;gap:10px;padding:10px 12px;border:1px solid #dbe4f0;border-radius:10px;background:#f8fafc;font-size:13px;';d.innerHTML='<b>'+esc(label)+'</b><span>'+esc(value||'Not answered')+'</span>';table.appendChild(d)}
+    function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+    if('{{task.code}}'==='Q2-A'){
+      for(let i=1;i<=10;i++){let c=document.querySelector(`[name="app${String(i).padStart(2,'0')}_category"]`)||document.querySelector(`[name="app${i}_category"]`), f=document.querySelector(`[name="app${String(i).padStart(2,'0')}_fuel"]`)||document.querySelector(`[name="app${i}_fuel"]`), r=document.querySelector(`[name="app${String(i).padStart(2,'0')}_reason"]`)||document.querySelector(`[name="app${i}_reason"]`); if(!c){c=document.querySelector(`[name="app${i}_category"]`);f=document.querySelector(`[name="app${i}_fuel"]`);r=document.querySelector(`[name="app${i}_reason"]`);} row('Application '+i,`Category: ${c?.value||''} | Fuel: ${f?.value||''} | Reason: ${r?.value||''}`)}
+    } else if('{{task.code}}'==='Q3-A'){
+      const active=document.querySelector('.proc-btn.active'); if(active) row('Selected thermodynamic process',active.innerText.replace(/\s+/g,' ').trim());
+      [['P₂',document.getElementById('rP2')?.textContent],['T₂',document.getElementById('rT2')?.textContent],['V₂',document.getElementById('rV2')?.textContent],['Work W',document.getElementById('resW')?.textContent],['Heat Q',document.getElementById('resQ')?.textContent],['ΔU',document.getElementById('resDU')?.textContent],['ΔH',document.getElementById('resDH')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q2-B'){
+      [['Fuel',document.getElementById('fuel')?.value],['Fuel mass',document.getElementById('mass')?.value],['Air supplied',document.getElementById('air')?.value],['O₂ required',document.getElementById('o2')?.textContent],['Theoretical air',document.getElementById('theory')?.textContent],['Air ratio',document.getElementById('ratio')?.textContent],['Combustion condition',document.getElementById('condition')?.textContent]].forEach(x=>{if(x[1])row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q3-B'){
+      [['Gas law',document.getElementById('law')?.value],['P₁ (kPa)',document.getElementById('p1')?.value],['T₁ (K)',document.getElementById('t1')?.value],['V₁ (m³)',document.getElementById('v1')?.value],['P₂ (kPa)',document.getElementById('rp')?.textContent],['T₂ (K)',document.getElementById('rt')?.textContent],['V₂ (m³)',document.getElementById('rv')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else if('{{task.code}}'==='Q4-B'){
+      [['Condition',document.getElementById('cond')?.value],['Pressure (bar)',document.getElementById('p')?.value],['Dryness fraction x',document.getElementById('x')?.value],['Superheat temperature (°C)',document.getElementById('ts')?.value],['h (kJ/kg)',document.getElementById('h')?.textContent],['v (m³/kg)',document.getElementById('v')?.textContent],['u (kJ/kg)',document.getElementById('u')?.textContent],['s (kJ/kg·K)',document.getElementById('s')?.textContent],['Final steam state',document.getElementById('state')?.textContent]].forEach(x=>{if(x[1]&&x[1]!=='—')row(x[0],x[1]);});
+      const ans=document.getElementById('answer'); if(ans?.value) row('Student engineering evidence',ans.value);
+    } else {
+      const controls=[...document.querySelectorAll('select,input,textarea')].filter(e=>e.id!=='screenshotInput' && e.name!=='screenshot' && !e.closest('#__finalSnapshot'));
+      controls.forEach(e=>{if(e.type==='hidden')return; let label=e.getAttribute('aria-label')||e.previousElementSibling?.textContent||e.id||e.name||'Field'; let val=e.value; if(val) row(label.trim().slice(0,90),val);});
+      const ans=document.getElementById('answer'); if(ans && ans.value) row('Student engineering evidence',ans.value);
+    }
+    box.appendChild(table);
+    const foot=document.createElement('div');foot.style.cssText='margin-top:16px;padding:10px 12px;border-radius:10px;background:linear-gradient(90deg,#eef2ff,#fce7f3);font-size:12px;font-weight:800;color:#312e81';foot.textContent='Captured at final submission';box.appendChild(foot);
+    const canvas=await html2canvas(box,{backgroundColor:'#ffffff',scale:1.4,useCORS:true,logging:false});
+    input.value=canvas.toDataURL('image/jpeg',0.82);
+    box.remove();
+    return true;
+  }catch(e){console.error('Snapshot failed',e); return true;}
+}
+for(const form of document.querySelectorAll('form')){
+  if(!form.querySelector('#screenshotInput')) continue;
+  form.addEventListener('submit',async function(ev){
+    const submitter=ev.submitter; if(!submitter || submitter.value!=='submit') return;
+    if(form.dataset.snapshotDone==='1') return;
+    ev.preventDefault();
+    if(typeof captureBoilerSnapshot==='function') await captureBoilerSnapshot(); else await captureFinalAnswerSnapshot();
+    form.dataset.snapshotDone='1'; form.submit();
+  });
+}
+</script>
+<script>
+/* PLM FINAL VISUAL RECORD: capture the actual task screen with current saved/selected values. */
+async function captureFinalAnswerSnapshot(){
+  const input=document.getElementById('screenshotInput');
+  const main=document.querySelector('main');
+  if(!input||!main) return true;
+  try{
+    const old=document.getElementById('__finalSnapshot'); if(old) old.remove();
+    const clone=main.cloneNode(true);
+    clone.id='__finalSnapshot';
+    clone.style.cssText='position:absolute;left:-100000px;top:0;width:1180px;background:#fff;padding:22px;font-family:Arial,sans-serif;color:#172033;box-sizing:border-box;';
+    clone.querySelectorAll('script').forEach(x=>x.remove());
+    clone.querySelectorAll('button').forEach(b=>{ if(/save|submit|unlock|lock/i.test(b.textContent||'')) b.remove(); });
+    /* Make every current control visibly readable in the record. */
+    clone.querySelectorAll('select').forEach(el=>{
+      const span=document.createElement('div'); span.textContent=el.options[el.selectedIndex]?.text || 'NIL';
+      span.style.cssText='padding:9px 11px;border:2px solid #93c5fd;border-radius:8px;background:#eff6ff;font-weight:800;color:#1e3a8a;min-height:18px;';
+      el.replaceWith(span);
+    });
+    clone.querySelectorAll('input,textarea').forEach(el=>{
+      if(el.type==='hidden') return;
+      const span=document.createElement('div'); span.textContent=(el.value||'').trim() || 'NIL';
+      span.style.cssText='padding:9px 11px;border:2px solid #cbd5e1;border-radius:8px;background:#f8fafc;font-weight:700;color:#172033;white-space:pre-wrap;min-height:18px;';
+      el.replaceWith(span);
+    });
+    clone.querySelectorAll('iframe').forEach(fr=>{
+      const box=document.createElement('div'); box.style.cssText='height:260px;border:2px dashed #94a3b8;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;color:#475569;';
+      box.innerHTML='BOILER WORKING MODEL<br><span style="font-size:12px;font-weight:600">Final nomenclature and engineering answers are shown below.</span>';
+      fr.replaceWith(box);
+    });
+    const banner=document.createElement('div');
+    banner.style.cssText='position:relative;margin:0 0 16px;padding:12px 16px;border-radius:12px;background:linear-gradient(90deg,#eef2ff,#fce7f3);border:2px solid #818cf8;font-weight:900;color:#312e81;';
+    banner.textContent='✓ FINAL SAVED ANSWER RECORD — selections/values shown exactly as saved at this point';
+    clone.insertBefore(banner,clone.firstChild);
+    document.body.appendChild(clone);
+    const canvas=await html2canvas(clone,{backgroundColor:'#ffffff',scale:1.15,useCORS:true,logging:false,windowWidth:1400});
+    input.value=canvas.toDataURL('image/jpeg',0.86);
+    clone.remove();
+    return true;
+  }catch(e){console.error('Visual snapshot failed',e); return true;}
+}
+/* Capture on SAVE and LOCK as well, so the latest saved state is available if the paper times out. */
+document.addEventListener('submit',async function(ev){
+  const form=ev.target;
+  if(!form || !form.querySelector || !form.querySelector('#screenshotInput')) return;
+  const sub=ev.submitter;
+  if(!sub || (sub.value!=='save' && sub.value!=='lock')) return;
+  if(form.dataset.visualSnapshotBusy==='1') return;
+  ev.preventDefault();
+  form.dataset.visualSnapshotBusy='1';
+  await captureFinalAnswerSnapshot();
+  form.submit();
+},false);
+</script></body></html>

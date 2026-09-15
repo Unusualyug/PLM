@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>PLM MESA Student Portal</title><link rel=stylesheet href=/static/style.css></head><body>
+<nav><b>⚙️ PLM MESA</b><span>{{session.name}} · {{session.enrollment}} · <a href=/logout>Logout</a></span></nav>
+<main>
+<div class="hero examiner-hero"><div><div class=eyebrow>STUDENT EXAMINATION DESK</div><h1>PLM MESA EXAMINATION</h1><p>Mechanical Engineering · 1st Sem B.Tech. · Proficient Learning Method · Mid Exam 2026</p></div><div class=studentmark>PAPER<br><strong>{{paper}}</strong></div></div>
+<section class="paper-banner card"><div><div class=eyebrow>YOUR ASSIGNED QUESTION PAPER</div><h2>Paper {{paper}}</h2><p>Complete the three assigned tasks. <b>SAVE</b> keeps your latest answer editable. <b>SUBMIT TASK</b> permanently closes that task.</p></div></section>
+<section class="card exam-control">
+  <div><div class=eyebrow>EXAM CONTROL</div><h2 id=examState>{{'PAPER SUBMITTED' if student.paper_final_submitted else 'EXAM IN PROGRESS'}}</h2><p id=examInstruction>{{'Your final paper has been submitted. All tasks are permanently locked.' if student.paper_final_submitted else 'When you are completely sure of all saved answers, press FINAL SUBMIT PAPER. After that no task can be opened again.'}}</p></div>
+  <div class=timerbox><small>TIME REMAINING</small><strong id=timer>--:--:--</strong></div>
+  {% if not student.paper_final_submitted %}<form method=post id=finalForm><input type=hidden name=action value=final_submit><button class="final-paper-btn" type=submit onclick="return confirm('FINAL SUBMIT PAPER? This will lock and submit ALL saved answers. You cannot open or edit any task afterward.')">🔴 FINAL SUBMIT PAPER</button></form>{% else %}<div class="final-done">🔒 FINAL PAPER SUBMITTED</div>{% endif %}
+</section>
+<div class="taskgrid">{% for t in tasks %}{% if t.status=='SUBMITTED' %}<div class="taskcard done"><div class=num>0{{t.task_no}}</div><div><small>{{t.code}}</small><h2>{{t.title}}</h2><p>{{t.type}} · {{t.marks}} marks</p></div><div class=status>🔒 SUBMITTED<br><small>Cannot open again</small></div></div>{% else %}<a class="taskcard" href=/task/{{t.id}}><div class=num>0{{t.task_no}}</div><div><small>{{t.code}}</small><h2>{{t.title}}</h2><p>{{t.type}} · {{t.marks}} marks</p></div><div class=status>{{'🔒 LOCKED ANSWER' if t.locked else '🔓 OPEN'}}</div></a>{% endif %}{% else %}<div class=card><h2>Waiting for assignment</h2><p>The examiner has not assigned your question paper yet.</p></div>{% endfor %}</div>
+<div class="notice warning"><b>⚠️ IMPORTANT EXAM INSTRUCTION</b><br>Use <b>SAVE</b> while working. Do <b>NOT</b> press <b>SUBMIT TASK</b> until you are completely sure because a submitted task cannot be opened or changed. At the end, <b>FINAL SUBMIT PAPER</b> locks all remaining saved answers together.</div>
+</main>
+<script>
+const started={{ ('"'+student.exam_started_at+'Z"') if student.exam_started_at else 'null' }};
+const durationMinutes={{ exam.duration or 120 }};
+const finalSubmitted={{ 'true' if student.paper_final_submitted else 'false' }};
+const timer=document.getElementById('timer');
+function finishByTimeout(){ if(finalSubmitted)return; const f=document.getElementById('finalForm'); if(!f)return; const h=document.createElement('input');h.type='hidden';h.name='timeout';h.value='1';f.appendChild(h); f.submit(); }
+function tick(){
+  if(!started){timer.textContent='--:--:--';return;}
+  const end=new Date(started).getTime()+durationMinutes*60000; let left=Math.max(0,end-Date.now());
+  const total=Math.floor(left/1000),h=Math.floor(total/3600),m=Math.floor((total%3600)/60),s=total%60;
+  timer.textContent=[h,m,s].map(x=>String(x).padStart(2,'0')).join(':');
+  if(left<=300000 && left>0){timer.parentElement.classList.add('urgent');}
+  if(left<=0){timer.textContent='00:00:00';finishByTimeout();}
+}
+tick();setInterval(tick,1000);
+const form=document.getElementById('finalForm');
+if(form) form.addEventListener('submit',e=>{const btn=form.querySelector('button');if(btn){btn.disabled=true;btn.textContent='🔒 SUBMITTING PAPER...';}});
+</script></body></html>

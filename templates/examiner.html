@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>PLM MESA Examination</title><link rel=stylesheet href=/static/style.css></head><body>
+<nav class="plm-nav"><b>⚙️ PLM MESA</b><span>Examiner: {{session.name}} · <a href=/logout>Logout</a></span></nav>
+<main>
+<div class="hero examiner-hero"><div><div class=eyebrow>EXAMINER CONTROL CENTER</div><h1>PLM MESA EXAMINATION</h1><p>Mechanical Engineering · 1st Sem B.Tech. · Proficient Learning Method</p></div><div class="stat colorful-stat">LIVE<br><strong>{{students|length}}</strong><small>students</small></div></div>
+<section class="card colorful-card paper-banner"><div><div class=eyebrow>PAPER SYSTEM</div><h2>Paper A + Paper B are active</h2><p>Assign a paper during enrollment. The portal automatically assigns the correct three questions.</p></div><div class=paper-badge>A / B</div></section>
+<section class=grid2><div class="card colorful-card"><h2>➕ Enroll Student — Assign Question Paper</h2><form method=post class=formgrid><input type=hidden name=action value=enroll><input name=name placeholder="Student name" required><input name=enrollment placeholder="Enrollment no." required><input name=password placeholder="Password (default student123)"><label>Question Paper<select name=paper><option value=A>Paper A — Q2 + Q3 + Q4</option><option value=B>Paper B — Q2-B + Q3-B + Q4-B</option></select></label><div class=assignment-preview><div><b>PAPER A</b><br><span>Q2-A · Q3-A · Q4-A</span></div><div><b>PAPER B</b><br><span>Q2-B · Q3-B · Q4-B</span></div></div><button>CREATE STUDENT + ASSIGN SELECTED PAPER</button></form></div>
+<div class="card colorful-card"><h2>📚 Paper A + B Question Bank</h2>{% for q in questions %}<div class=q><b>{{q.code}}</b> · {{q.title}} <span>{{q.marks}} marks</span><p>{{q.type}}</p></div>{% endfor %}</div></section>
+
+<section class="card colorful-card monitoring"><div class="monitor-head"><div><div class=eyebrow>LIVE EXAM TRACKING</div><h2>👥 Student Monitoring</h2><p>See submitted tasks, remaining tasks, access status and evaluation status in one place.</p></div></div>
+<div class=table-wrap><table><tr><th>Student</th><th>Enrollment</th><th>Paper</th><th>Task 1</th><th>Task 2</th><th>Task 3</th><th>Progress</th><th>Access</th><th>PDF</th><th>Evaluation</th></tr>
+{% for s in students %}<tr>
+<td><strong>{{s.name}}</strong></td><td>{{s.enrollment}}</td><td><strong>{{s.paper or 'A'}}</strong></td>
+{% for t in student_details[s.id] %}<td><span class="task-status {{'submitted' if t.status=='SUBMITTED' else 'open'}}">{{'✓ SUBMITTED' if t.status=='SUBMITTED' else 'OPEN'}}</span><small>{{t.code}}</small></td>{% endfor %}
+<td><b>{{s.submitted or 0}} / 3</b><br><small>{{3-(s.submitted or 0)}} remaining</small></td>
+<td><form method=post class=inline-form><input type=hidden name=action value=toggle_access><input type=hidden name=student_id value={{s.id}}><button class="access-btn {{'enable' if not s.active else 'disable'}}">{{'ENABLE' if not s.active else 'DISABLE'}}</button></form></td>
+<td>{% if s.submitted==3 %}<a class=pdf-btn href="{{url_for('student_pdf',sid=s.id)}}">📄 PDF</a>{% else %}<span class=pdf-disabled>Available after 3/3</span>{% endif %}</td>
+<td>{% if s.submitted==3 %}<button type=button class=eval-btn onclick="document.getElementById('eval-{{s.id}}').scrollIntoView({behavior:'smooth',block:'center'})">✏️ EVALUATE</button>{% else %}<span class=pdf-disabled>Waiting</span>{% endif %}</td>
+</tr>{% else %}<tr><td colspan=10>No students enrolled yet.</td></tr>{% endfor %}</table></div></section>
+
+{% for s in students %}
+<section class="card colorful-card eval-card" id="eval-{{s.id}}"><div class=eval-title><div><div class=eyebrow>{{s.paper or 'A'}} · {{s.enrollment}}</div><h2>📝 Evaluate — {{s.name}}</h2><p>Enter marks manually after reviewing the student's PDF. Maximum is 10 marks per task.</p></div><div class=total-mark><span>Total</span><strong>{{'%.1f'|format(s.total_awarded or 0)}}</strong><small>/ 30</small></div></div>
+<form method=post><input type=hidden name=action value=save_marks><input type=hidden name=student_id value={{s.id}}>
+<div class=eval-grid>{% for t in student_details[s.id] %}<div class=eval-row><div><b>{{t.code}} — {{t.title}}</b><span>{{'✓ Submitted' if t.status=='SUBMITTED' else 'Not submitted'}}</span></div><input type=hidden name=assignment_id value={{t.id}}><label>Marks / 10<input type=number min=0 max=10 step=0.5 name="mark_{{t.id}}" value="{{'' if t.awarded_marks is none else t.awarded_marks}}" placeholder="0–10"></label><label>Observation / Note<input name="note_{{t.id}}" value="{{t.evaluation_note or ''}}" placeholder="Optional examiner note"></label></div>{% endfor %}</div><button class="save-eval">💾 SAVE EVALUATION</button>{% if s.submitted==3 %}<a class=pdf-btn href="{{url_for('student_pdf',sid=s.id)}}">📄 DOWNLOAD / REVIEW PDF AGAIN</a>{% endif %}</form></section>
+{% endfor %}
+</main></body></html>
