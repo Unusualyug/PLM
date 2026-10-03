@@ -1,0 +1,10 @@
+static/uploads/*
+static/results/*
+!static/uploads/.gitkeep
+!static/results/.gitkeep
+models/*.pt
+runs/
+dataset/images/**/*.jpg
+dataset/images/**/*.png
+dataset/labels/**/*.txt
+__pycache__/

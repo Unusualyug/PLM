@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>YOLO Object Detection Studio</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+<header>
+  <h1>YOLO <span>Object Detection Studio</span></h1>
+  <p>Upload an image or video, or run live webcam detection. Powered by Ultralytics YOLO11.</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="upload">Image / Video</button>
+  <button class="tab" data-tab="live">Live Webcam</button>
+  <button class="tab" data-tab="stats">Analytics</button>
+</nav>
+
+<main>
+  <section class="panel">
+    <h2>Settings</h2>
+    <label>Confidence <output id="confOut">0.25</output>
+      <input type="range" id="conf" min="0.05" max="0.95" step="0.05" value="0.25" />
+    </label>
+    <label>IoU (NMS) <output id="iouOut">0.45</output>
+      <input type="range" id="iou" min="0.1" max="0.9" step="0.05" value="0.45" />
+    </label>
+    <label class="check"><input type="checkbox" id="track" checked /> Track objects in video (ByteTrack)</label>
+    <label>Filter classes
+      <select id="classes" multiple size="8"></select>
+    </label>
+    <small>Ctrl/Cmd-click to select multiple. Nothing selected = detect all classes.</small>
+    <div id="modelStatus" class="status"></div>
+  </section>
+
+  <section class="content">
+    <div class="view" id="view-upload">
+      <div id="drop" class="drop">
+        <input type="file" id="file" accept="image/*,video/*" hidden />
+        <p><strong>Drop a file here</strong> or click to browse</p>
+        <small>JPG / PNG / MP4 / MOV &middot; max 200 MB</small>
+      </div>
+      <button id="runBtn" class="primary" disabled>Run Detection</button>
+      <div id="uploadResult" class="result"></div>
+    </div>
+
+    <div class="view hidden" id="view-live">
+      <div class="live-wrap">
+        <video id="cam" autoplay playsinline muted></video>
+        <canvas id="overlay"></canvas>
+      </div>
+      <div class="row">
+        <button id="camStart" class="primary">Start Camera</button>
+        <button id="camStop" class="ghost">Stop</button>
+        <span id="fps" class="pill">-- ms</span>
+      </div>
+      <div id="liveCounts" class="chips"></div>
+    </div>
+
+    <div class="view hidden" id="view-stats">
+      <h2>Detection log</h2>
+      <p id="logSummary">Loading…</p>
+      <div id="logChart" class="chart"></div>
+      <a class="primary" href="/api/log.csv">Download CSV</a>
+    </div>
+  </section>
+</main>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
